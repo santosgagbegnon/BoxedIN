@@ -12,9 +12,15 @@ const export_button = document.getElementById("export-button")
 const next_butotn = document.getElementById("next-button")
 const previous_button = document.getElementById("previous-button")
 
-//Stage where image and shapes will be drawn
-console.log(container_div.offsetHeight)
+//Adding event listeners
+container_div.addEventListener("mousedown", function(e){
+    createRectangle(e)
+})
 
+container_div.addEventListener("mousemove", function(e){
+    updateRectangle(e)
+})
+//Stage where image and shapes will be drawn
 const stage = new Konva.Stage({
     container: "container",
     width: container_div.offsetWidth,
@@ -23,17 +29,12 @@ const stage = new Konva.Stage({
 
 //layer that only contains the image
 const imageLayer = new Konva.Layer()
-var timestamp = new Date().getTime();
 
 const imageObject = new Image()
 imageObject.src = "assets/default.jpg" 
-// imageObject.setAttribute('crossOrigin', 'anonymous');
-
 imageObject.onload = imageLoaded
 
 function imageLoaded(){
-    console.log("image loaded")
-    console.log(imageObject.width)
     const image = new Konva.Image({
         image: imageObject,
         x: stage.width()/2,
@@ -41,19 +42,14 @@ function imageLoaded(){
         width: imageObject.width,
         height: imageObject.height,
     })
-    // const image = new Konva.Image(scaleSize(stage,imageObject))
     image.offsetX(image.width()/2)
-    // stage.size({
-    //     width: image.width(),
-    //     height: image.height()
-    // })
-    console.log("image width:",image.width())
+   
     const scale = scaleSize(stage, imageObject)
     image.scale({
         x: scale,
         y: scale
     })
-
+    console.log("first")
     imageLayer.add(image)
     stage.add(imageLayer)
 }
@@ -61,24 +57,49 @@ function imageLoaded(){
 function scaleSize(stage, imageObject){
     const widthRatio = stage.width() / imageObject.width
     const heightRatio = stage.height() / imageObject.height
-    // const config = {
-    //     image: imageObject,
-    //     x: 0,
-    //     y: 0,
-    //     width: imageObject.width,
-    //     height: imageObject.height,
-    // }
-
-    // if(widthRatio > heightRatio){
-    //     config.y = stage.width()/2
-    //     config.width = config.width * widthRatio
-    //     config.height = config.height * widthRatio
-    // }
-    // else if(widthRatio < heightRatio){
-    //     config.x = stage.width()/2
-    //     config.width = config.width * heightRatio
-    //     config.height = config.height * heightRatio
-    // }
-
     return Math.max(widthRatio, heightRatio)
+}
+
+const rectangeLayer = new Konva.Layer()
+
+var rectangle = new Konva.Rect({
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    stroke: 'red',
+    strokeWidth: 2
+  });
+
+const shouldAdd = true
+
+/// Event Listener Handlers
+function createRectangle(event){
+    if(!shouldAdd){return}
+    console.log("second")
+
+    console.log(event.clientX)
+    rectangle.position({
+        x: stage.getPointerPosition().x,
+        y: stage.getPointerPosition().y,
+    })
+    stage.add(rectangeLayer)
+    rectangeLayer.add(rectangle)
+    rectangeLayer.draw()
+}
+
+function updateRectangle(event){
+    if(event.which != 1){return}
+    
+     // now we find relative point
+     var pos = stage.getPointerPosition();
+
+    const width = (pos.x - rectangle.x()) 
+    const height = ( pos.y - rectangle.y())
+
+    rectangle.size({
+        width: width,
+        height: height
+    });
+    rectangeLayer.draw()
 }
