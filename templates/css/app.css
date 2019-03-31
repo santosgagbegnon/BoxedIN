@@ -101,12 +101,15 @@ header {
 } 
 
 canvas {
+	
 	padding: 0px;
-
+	overflow: scroll;
+	/* position: fixed; */
 	background: red; 
-	height: 1080px;
+	height: 100%;
+	width: 100%;
 	order: 1;
-	flex: 0 1 100%; 
+	/* flex: 0 1 100%;  */
 }
 
 .move-button {
