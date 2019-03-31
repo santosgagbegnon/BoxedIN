@@ -2,30 +2,33 @@
 	margin: 0px;
 	padding: 0px;
 	color: white;
+	font-family: Yantramanav,sans-serif;
 }
 
 #sidebar {
-	/*Strictly Necessary */
 	position:fixed; 
 	height: 100%;
 	width:20%;
 	margin: 0px;  
-
-  /*Aesthetics*/
-  background: #363535; 
+	background: #363535; 
+}
+#sidebar-title{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #03aa8c;
+	height: 90px;
+	text-align: center;
 }
 
-
 #rightSideWrapper {
-	/*Strictly Necessary */
 	width:80%; 
 	float: right;
-
-	/*Aesthetics*/
 	background: black;	
 }
 
 #rightSideWrapper > header > h2 {
+	font-size: 20px;
 	float: left;
 	display: block;
 }
@@ -35,13 +38,10 @@ header {
 	justify-content: center;
 	align-items: center;
 	text-align: center;
-	/*Strictly Necessary */
 	position: fixed;
 	width: 80%;	
-	height: 70px; /*Adjust the hight to your purposes*/
-	
-	/*Aesthetics*/
-	background: pink;
+	height: 50px; 
+	background: #363535; 
 }
 
 .ContentBox{
@@ -51,19 +51,17 @@ header {
 } 
 
 canvas {
-	/*Aesthetics*/
-	 background: red; 
-	 height: 600px;
-
-	  /*Strictly Necessary */
-	  order: 1;
-	  flex: 0 1 100%; 
+	background: red; 
+	height: 600px;
+	order: 1;
+	flex: 0 1 100%; 
 }
 
 
-
 .move-button {
-	
+	height: 25px;
+	width: 25px;
+	padding: 5px;
 }
 
 #next-button {
@@ -73,6 +71,6 @@ canvas {
 
 .arrows{
 	position: fixed;
-	right: 0px;
+	right: 10px;
 	float: right;
 }
