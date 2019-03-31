@@ -1,53 +1,31 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset=utf-8>
-        <title>BoxedIN</title>
-        <link rel="stylesheet" href="css/app.css">
-        <link href="https://fonts.googleapis.com/css?family=Yantramanav:700" rel="stylesheet">
-    </head>
-    <header>
-        <h2 id="image-title">Image Name (num/total)</h2>
-        <div class="nav-button" id="previous">
-                <img src="assets/Back.png" alt=""></img>
-            </div>
-        <div class="nav-button" id="next">
-            <img src="assets/Forward.png" alt=""></img>
-        </div> 
-    </header>
-    <body>
-        <!-- <div id="toolbar">
-            <div class="title">
-                <h3>BoxedIN</h3>
-            </div>
-            <span class="StackSpan" id="undo">Undo</span> <span class="StackSpan" id="redo">Redo</span>
-            <br></br>
-            <input type="checkbox"></input>
-            <ul id=labels>
-                <li class=label>Label One</li>
-                <li class=label>Label One</li>
-                <li class=label>Label One</li>
-                <li class=label>Label One</li>
-                <li class=label>Label One</li>
-                <li class=label>Label One</li>
-                <li class=label>Label One</li>
-                <li class=label>Label One</li>
-                <li class=label>Label One</li>
-                <li class=label>Label One</li>
-                <li class=label>Label One</li>
-                <li class=label>Label One</li>
-                <li class=label>Label One</li>
-                <li class=label>Label One</li>
-                <li class=label>Label One</li>
-                <li class=label>Label One</li>
-                <li class=label>Label One</li>
-                <li class=label>Label One</li>
-            </ul>
-            <button id="ExportDataset" type="button">Export Dataset</button>
-        </div> -->
-        <div id="canvas">
-            <canvas id="image-canvas">
-            </canvas>
-        </div>
-    </body>
+	<head>
+		<meta charset="utf-8">
+		<title> BoxedIN </title>
+		<link rel="Stylesheet" href="css/app.css">
+	</head>
+  
+	<body>
+		<div id="sidebar">
+			BoxedIN
+		</div>
+		<div id="rightSideWrapper">
+			<header> 
+				<h2 id="image-title">Image Name (num/total)</h2>
+				<div class = "arrows">
+					<input class="move-button" id="next-button" type="image" src="/Users/santos/Developer/python/BoxedIN/templates/assets/Back.png"/>
+					<input class="move-button" id="previous-button" type="image" src="/Users/santos/Developer/python/BoxedIN/templates/assets/Forward.png"/>
+				</div>
+			</header>
+			
+			<div class="ContentBox">
+				<canvas id="image-canvas"> </canvas>
+			</div>
+			
+		</div>
+
+	</body>
+	
 </html>
+
