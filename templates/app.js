@@ -23,14 +23,17 @@ const stage = new Konva.Stage({
 
 //layer that only contains the image
 const imageLayer = new Konva.Layer()
+var timestamp = new Date().getTime();
 
 const imageObject = new Image()
-imageObject.src = "assets/default.jpg"
+imageObject.src = "assets/default.jpg" 
+// imageObject.setAttribute('crossOrigin', 'anonymous');
+
 imageObject.onload = imageLoaded
 
 function imageLoaded(){
     console.log("image loaded")
-    console.log(stage.getAttr("height")/2)
+    console.log(imageObject.width)
     const image = new Konva.Image({
         image: imageObject,
         x: stage.width()/2,
@@ -38,20 +41,44 @@ function imageLoaded(){
         width: imageObject.width,
         height: imageObject.height,
     })
-    image.offsetX(imageObject.width/2)
+    // const image = new Konva.Image(scaleSize(stage,imageObject))
+    image.offsetX(image.width()/2)
+    // stage.size({
+    //     width: image.width(),
+    //     height: image.height()
+    // })
+    console.log("image width:",image.width())
     const scale = scaleSize(stage, imageObject)
-    console.log(scale)
     image.scale({
         x: scale,
         y: scale
     })
+
     imageLayer.add(image)
     stage.add(imageLayer)
 }
 
 function scaleSize(stage, imageObject){
-    let widthRatio = stage.getAttr("width") / imageObject.width
-    let heightRatio = stage.getAttr("height") / imageObject.height
-    console.log(widthRatio)
-    return Math.min(widthRatio,heightRatio)
+    const widthRatio = stage.width() / imageObject.width
+    const heightRatio = stage.height() / imageObject.height
+    // const config = {
+    //     image: imageObject,
+    //     x: 0,
+    //     y: 0,
+    //     width: imageObject.width,
+    //     height: imageObject.height,
+    // }
+
+    // if(widthRatio > heightRatio){
+    //     config.y = stage.width()/2
+    //     config.width = config.width * widthRatio
+    //     config.height = config.height * widthRatio
+    // }
+    // else if(widthRatio < heightRatio){
+    //     config.x = stage.width()/2
+    //     config.width = config.width * heightRatio
+    //     config.height = config.height * heightRatio
+    // }
+
+    return Math.max(widthRatio, heightRatio)
 }
