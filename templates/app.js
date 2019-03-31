@@ -12,3 +12,8 @@ const export_button = document.getElementById("export-button")
 const next_butotn = document.getElementById("next-button")
 const previous_button = document.getElementById("previous-button")
 
+//Stage where image and shapes will be drawn
+const stage = new Konva.Stage({
+    container: "container"
+})
+
