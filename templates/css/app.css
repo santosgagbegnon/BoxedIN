@@ -4,6 +4,9 @@
 	color: white;
 	font-family: Yantramanav,sans-serif;
 }
+html{
+	background-color: #363535;
+}
 
 #sidebar {
 	position:fixed; 
@@ -68,8 +71,6 @@
     font-size: 15px;
 }
 
-
-
 #rightSideWrapper {
 	width:80%; 
 	float: right;
@@ -94,14 +95,16 @@ header {
 }
 
 .ContentBox{
-	margin-top: 70px; /*The height of the   header*/
+	margin-top: 50px; /*The height of the   header*/
 	display:flex;
 	flex-flow: row wrap;
 } 
 
 canvas {
+	padding: 0px;
+
 	background: red; 
-	height: 600px;
+	height: 1080px;
 	order: 1;
 	flex: 0 1 100%; 
 }
