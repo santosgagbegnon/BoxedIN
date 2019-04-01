@@ -129,6 +129,25 @@ class Canvas{
         const heightRatio = stage.height() / imageObject.height
         return Math.max(widthRatio, heightRatio)
     }
+
+    draggable(shouldDrag){
+        console.log("rect")
+        const rectangles = this.rectangeLayer.getChildren(function(node){
+            return node.getClassName() === 'Rect'
+        })
+        console.log(rectangles)
+       
+        if(shouldDrag){
+            for(var index = 0; index < rectangles.length; index++){
+                rectangles[index].draggable(true)
+            }
+        }
+        else{
+            for(var index = 0; index < rectangles.length; index++){
+                rectangles[index].draggable(false)
+            }
+        }
+    }
 }
 
 export default Canvas

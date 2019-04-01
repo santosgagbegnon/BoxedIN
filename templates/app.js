@@ -20,20 +20,68 @@ const next_butotn = document.getElementById("next-button")
 const previous_button = document.getElementById("previous-button")
 let canvas = null
 
+let tool = 0 //Represebts which tool is active, 0: Draw, 1: Move, 2: Resizing
+
+export_button.addEventListener("click", function(){
+    tool = (tool + 1) % 3
+    console.log(tool)
+})
 
 //Adding event listeners
 container_div.addEventListener("mousedown", function(e){
     if(canvas == null){return}
-    canvas.createRectangle()
+    switch(tool){
+        case 0:
+            canvas.draggable(false)
+            canvas.createRectangle()
+            break
+
+        case 1:
+            canvas.draggable(true)
+            break
+
+        case 2:
+            canvas.draggable(false)
+            break
+        
+        default:
+            break
+    }
 })
 
 container_div.addEventListener("mousemove", function(e){
     if(canvas == null){return}
-    canvas.updateRectangle(e)
+    switch(tool){
+        case 0:
+            canvas.updateRectangle(e)
+            break;
+
+        case 1:
+            break
+
+        case 2:
+            break
+        
+        default:
+            break
+    }
 })
 
 container_div.addEventListener('mouseup', function(e){
-   console.log(canvas.finishCurrentRectangle())
+    switch(tool){
+        case 0:
+            console.log(canvas.finishCurrentRectangle())
+            break;
+
+        case 1:
+            break
+
+        case 2:
+            break
+        
+        default:
+            break
+    }
 })
 
 const imageObject = new Image()
