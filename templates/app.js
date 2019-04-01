@@ -18,13 +18,13 @@ const labels_list = document.getElementById("labels-list")
 const export_button = document.getElementById("export-button")
 const next_butotn = document.getElementById("next-button")
 const previous_button = document.getElementById("previous-button")
-const shouldAdd = true
+let canvas = null
 
 
 //Adding event listeners
 container_div.addEventListener("mousedown", function(e){
-    if(!shouldAdd || canvas == null){return}
-    canvas.createRectangle(e)
+    if(canvas == null){return}
+    canvas.createRectangle()
 })
 
 container_div.addEventListener("mousemove", function(e){
@@ -32,11 +32,14 @@ container_div.addEventListener("mousemove", function(e){
     canvas.updateRectangle(e)
 })
 
+container_div.addEventListener('mouseup', function(e){
+   console.log(canvas.finishCurrentRectangle())
+})
+
 const imageObject = new Image()
 imageObject.src = "assets/default.jpg" 
 imageObject.onload = imageLoaded
 
-let canvas = null
 
 function imageLoaded(){
     canvas = new Canvas(container_div.offsetWidth,container_div.offsetHeight,imageObject)

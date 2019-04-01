@@ -44,31 +44,35 @@ class Canvas{
         //adds imageLayer to stage
         this.stage.add(this.imageLayer)
 
-        //temp variables (too remove)
+        //The current rectangle being added to the screen
+        this.currentRectangle = null
+
+        //The total count of rectangles current on the screen
+        this.numberOfRectangles = 0
+
+        //The layer that contains all of the drawn rectangles
         this.rectangeLayer = new Konva.Layer()
-        this.rectangle = new Konva.Rect({
-            x: 0,
-            y: 0,
+
+        //adds the rectangle layer to the stage
+        this.stage.add(this.rectangeLayer)
+    }
+
+    /**
+     * Creates a new rectangle. This method is meant to be called when the canvas is clicked on.
+     */
+    createRectangle(){    
+        //Creates new rectangle position at the location that was pressed on in the canvas
+        this.currentRectangle = new Konva.Rect({
+            x: this.stage.getPointerPosition().x,
+            y: this.stage.getPointerPosition().y,
             width: 0,
             height: 0,
             stroke: 'red',
             strokeWidth: 2
           });
-    }
-
-    /**
-     * Creates a new rectangle. This method is meant to be called when the canvas is clicked on.
-     * @param {Event} event the event that triggered this method
-     */
-    createRectangle(event){    
-        //Starts new rectangle position at the location that was pressed on in the canvas
-        this.rectangle.position({
-            x: this.stage.getPointerPosition().x,
-            y: this.stage.getPointerPosition().y,
-        })
+        
         //adds the rectangle to the layer
-        this.stage.add(this.rectangeLayer)
-        this.rectangeLayer.add(this.rectangle)
+        this.rectangeLayer.add(this.currentRectangle)
         this.rectangeLayer.draw()
     }
     /**
@@ -81,16 +85,37 @@ class Canvas{
         const position = this.stage.getPointerPosition();
 
         //Calculates the width & height of the rectangle by subtracting the current position from the original position that was saved in the createRectangle method
-        const width = position.x - this.rectangle.x()
-        const height = position.y - this.rectangle.y()
+        const width = position.x - this.currentRectangle.x()
+        const height = position.y - this.currentRectangle.y()
 
         //changes the size of the rectangle
-        this.rectangle.size({
+        this.currentRectangle.size({
             width: width,
             height: height
         });
         //redraws the rectangle
         this.rectangeLayer.draw()
+    }
+
+    /**
+     * If there is a current rectangle being created that is a width & height not equal to zero, it will give the update the object to take notice of the new rectangle. If the rectangle is saved, it's ID will be returned. Otherwise, it will remove the 
+     * the current rectangle from the canvas and return null. 
+     */
+    finishCurrentRectangle(){
+        //Checks if the rectangle exists and has a size
+        if(this.currentRectangle == null || this.currentRectangle.width() == 0 || this.currentRectangle.height == 0){
+            this.currentRectangle.destroy()
+            return null
+        }
+        //Creates a unique ID for the new rectangle
+        const rectangleName = "rectangle"+this.numberOfRectangles
+        //Setss the name of the rectangle to the unique id created
+        this.currentRectangle.name(rectangleName)
+        //increases the number of rectangles present in the rectangleLayer
+        this.numberOfRectangles ++
+        //resets the current rectangle to null
+        this.currentRectangle = null
+        return rectangleName
     }
     /**
      * Calculates the value to scale the image by to have it fill the stage while not being stretched
@@ -98,9 +123,9 @@ class Canvas{
      * @param {*} imageObject image to be scaled
      */
     scaleSize(stage, imageObject){
+        //calculates the stage:imageObject ratios
         const widthRatio = stage.width() / imageObject.width
         const heightRatio = stage.height() / imageObject.height
-        console.log(Math.max(widthRatio, heightRatio))
         return Math.max(widthRatio, heightRatio)
     }
 }
