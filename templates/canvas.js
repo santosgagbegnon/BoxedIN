@@ -109,8 +109,9 @@ class Canvas{
         }
         //Creates a unique ID for the new rectangle
         const rectangleName = "rectangle"+this.numberOfRectangles
-        //Setss the name of the rectangle to the unique id created
+        //Sets the name of the rectangle to the unique id created
         this.currentRectangle.name(rectangleName)
+
         //increases the number of rectangles present in the rectangleLayer
         this.numberOfRectangles ++
         //resets the current rectangle to null
