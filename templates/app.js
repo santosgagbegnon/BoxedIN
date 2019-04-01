@@ -22,6 +22,7 @@ let canvas = null
 
 let tool = 0 //Represebts which tool is active, 0: Draw, 1: Move, 2: Resizing
 
+//Temporary: Allows user to toggle between the 3 options 
 export_button.addEventListener("click", function(){
     tool = (tool + 1) % 3
     console.log(tool)
