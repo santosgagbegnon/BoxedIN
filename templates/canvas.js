@@ -1,6 +1,7 @@
 
 /**
  * Class that represents a drawable canvas.
+ * TODO:
  */
 class Canvas{
     
@@ -81,6 +82,7 @@ class Canvas{
         var transformer = new Konva.Transformer({
             rotateEnabled: false
         });
+
         this.rectangleLayer.add(transformer);
         transformer.attachTo(e.target);
         this.rectangleLayer.draw();
@@ -144,6 +146,29 @@ class Canvas{
         //increases the number of rectangles present in the rectangleLayer
         this.numberOfRectangles ++
 
+        //Add listener for transform event (called when a rectangle is being resized)
+        this.currentRectangle.on("transform", function(e){
+            const rectangle = e.currentTarget
+            const scaleX = rectangle.scaleX()
+            const scaleY = rectangle.scaleY()
+
+            rectangle.size({
+                width: rectangle.width() * scaleX,
+                height: rectangle.height() * scaleY
+            })
+
+            rectangle.position({
+                x: rectangle.x() + (scaleX - 1),
+                y: rectangle.y() + (scaleY - 1)
+            })
+
+            rectangle.scale({
+                x: 1,
+                y: 1
+            })
+        })
+
+
         //resets the current rectangle to null
         this.currentRectangle = null
         return rectangleName
@@ -182,6 +207,10 @@ class Canvas{
             }
         }
         this.rectangleLayer.draw();
+    }
+    //TODO: Implement
+    convertScaleToSize(e){
+        console.log("Transforming something")
     }
 
 }
