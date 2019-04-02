@@ -3,3 +3,6 @@
 
 #Ignore random test images
 templates/assets/test_images
+
+#Ignore testing HTML
+test.html

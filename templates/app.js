@@ -24,8 +24,10 @@ let tool = 0 //Represebts which tool is active, 0: Draw, 1: Move, 2: Resizing
 
 //Temporary: Allows user to toggle between the 3 options 
 export_button.addEventListener("click", function(){
-    tool = (tool + 1) % 3
-    console.log(tool)
+    tool = (tool + 1) % 2
+    if(tool == 1){
+        canvas.editable(true)
+    }
 })
 
 //Adding event listeners
@@ -33,18 +35,14 @@ container_div.addEventListener("mousedown", function(e){
     if(canvas == null){return}
     switch(tool){
         case 0:
-            canvas.draggable(false)
+            canvas.editable(false)
             canvas.createRectangle()
             break
 
         case 1:
-            canvas.draggable(true)
+            canvas.editable(true)
             break
 
-        case 2:
-            canvas.draggable(false)
-            break
-        
         default:
             break
     }
@@ -59,9 +57,6 @@ container_div.addEventListener("mousemove", function(e){
 
         case 1:
             break
-
-        case 2:
-            break
         
         default:
             break
@@ -71,15 +66,12 @@ container_div.addEventListener("mousemove", function(e){
 container_div.addEventListener('mouseup', function(e){
     switch(tool){
         case 0:
-            console.log(canvas.finishCurrentRectangle())
+            canvas.finishCurrentRectangle()
             break;
 
         case 1:
             break
-
-        case 2:
-            break
-        
+    
         default:
             break
     }
@@ -92,4 +84,10 @@ imageObject.onload = imageLoaded
 
 function imageLoaded(){
     canvas = new Canvas(container_div.offsetWidth,container_div.offsetHeight,imageObject)
+    canvas.stage.on('click tap', function (e) {
+        console.log("Click tap")
+        canvas.clickTap(e)
+    })
+    
+    
 }

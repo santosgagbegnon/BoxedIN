@@ -17,6 +17,7 @@ class Canvas{
             width: width,
             height: height,
         })
+
         //Creates the baseline image of the canvas
         this.image = new Konva.Image({
             image: image,
@@ -51,18 +52,46 @@ class Canvas{
         this.numberOfRectangles = 0
 
         //The layer that contains all of the drawn rectangles
-        this.rectangeLayer = new Konva.Layer()
+        this.rectangleLayer = new Konva.Layer()
 
         //adds the rectangle layer to the stage
-        this.stage.add(this.rectangeLayer)
-    }
+        this.stage.add(this.rectangleLayer)
 
+        this.shouldResize = false
+
+    }
+    //TODO: Rename, move and comments
+    clickTap(e){
+        if(!this.shouldResize){return}
+
+        // if click on empty area - remove all transformers
+        if (e.target === this.stage || e.target.getClassName() == "Image"){
+            this.stage.find("Transformer").destroy()
+            this.rectangleLayer.draw()
+            return
+        }
+        // do nothing if clicked NOT on our rectangles
+        if (e.target.getClassName() != "Rect") {
+            return
+        }
+        // remove old transformers
+        this.stage.find("Transformer").destroy();
+    
+        // create new transformer
+        var transformer = new Konva.Transformer({
+            rotateEnabled: false
+        });
+        this.rectangleLayer.add(transformer);
+        transformer.attachTo(e.target);
+        this.rectangleLayer.draw();
+    }
     /**
      * Creates a new rectangle. This method is meant to be called when the canvas is clicked on.
      */
     createRectangle(){    
         //Creates new rectangle position at the location that was pressed on in the canvas
         this.currentRectangle = new Konva.Rect({
+            name: "Rectangle",
             x: this.stage.getPointerPosition().x,
             y: this.stage.getPointerPosition().y,
             width: 0,
@@ -72,8 +101,8 @@ class Canvas{
           });
         
         //adds the rectangle to the layer
-        this.rectangeLayer.add(this.currentRectangle)
-        this.rectangeLayer.draw()
+        this.rectangleLayer.add(this.currentRectangle)
+        this.rectangleLayer.draw()
     }
     /**
      * Changes the size of the current rectangle being created according to the user's mouse location. This method is meant to be called when the user has moved their mouse while pressing on the left mouse button
@@ -94,7 +123,7 @@ class Canvas{
             height: height
         });
         //redraws the rectangle
-        this.rectangeLayer.draw()
+        this.rectangleLayer.draw()
     }
 
     /**
@@ -114,14 +143,15 @@ class Canvas{
 
         //increases the number of rectangles present in the rectangleLayer
         this.numberOfRectangles ++
+
         //resets the current rectangle to null
         this.currentRectangle = null
         return rectangleName
     }
     /**
      * Calculates the value to scale the image by to have it fill the stage while not being stretched
-     * @param {*} stage the stage containing the image
-     * @param {*} imageObject image to be scaled
+     * @param {Konva.Stage} stage the stage containing the image
+     * @param {Image} imageObject image to be scaled
      */
     scaleSize(stage, imageObject){
         //calculates the stage:imageObject ratios
@@ -130,24 +160,30 @@ class Canvas{
         return Math.max(widthRatio, heightRatio)
     }
 
-    draggable(shouldDrag){
-        console.log("rect")
-        const rectangles = this.rectangeLayer.getChildren(function(node){
+    /**
+     * Sets whether or not the user is able to drag and resize rectangles
+     * @param {boolean} shouldEdit true if the canvas should be editable, otherwise false
+     */
+    editable(shouldEdit){
+        const rectangles = this.rectangleLayer.getChildren(function(node){
             return node.getClassName() === 'Rect'
         })
-        console.log(rectangles)
-       
-        if(shouldDrag){
+
+        if(shouldEdit){
+            this.shouldResize = true
             for(var index = 0; index < rectangles.length; index++){
                 rectangles[index].draggable(true)
             }
         }
         else{
+            this.shouldResize = false
             for(var index = 0; index < rectangles.length; index++){
                 rectangles[index].draggable(false)
             }
         }
+        this.rectangleLayer.draw();
     }
+
 }
 
 export default Canvas
