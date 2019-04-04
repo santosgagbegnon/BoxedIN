@@ -262,6 +262,7 @@ export default class Canvas{
      */
     getLabelColour(id){
         const targetLabel = this.findLabel(id) 
+        let newColour = null
         if(targetLabel == null){
            return
         }
@@ -270,32 +271,23 @@ export default class Canvas{
             const currentLabel = this.labels[index]
             //checks to see if the name of the labels match, but the IDs don't. This ensure that the currentLabel is not the exact same as the targetLabel
             if(currentLabel.name == targetLabel.name && currentLabel.id != targetLabel.id){
-                //updates the colour of the targetLabel
-                targetLabel.config({
-                    colour: currentLabel.colour
-                })
-                //updates the colour of the rectangle
-                const rectangle = this.findRectangle(id)
-                if(rectangle != null){
-                    rectangle.stroke(currentLabel.colour)
-                    this.rectangleLayer.draw()
-                }
-                return currentLabel.colour
-                
+                newColour = currentLabel.colour
+                break
            }
         }
-        colourCount += 1
+        if(newColour == null) { colourCount += 1}
+       
         //sets the new colour of the target label
         targetLabel.config({
-            colour: colours[colourCount%3]
+            colour: newColour || colours[colourCount%3] 
         })
         //updates the colour of the rectangle
         const rectangle = this.findRectangle(id)
         if(rectangle != null){
-            rectangle.stroke(colours[colourCount%3])
+            rectangle.stroke(newColour || colours[colourCount%3])
             this.rectangleLayer.draw()
         }
-       return colours[colourCount%3]
+       return newColour || colours[colourCount%3] 
     }
 
 }
