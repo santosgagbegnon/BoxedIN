@@ -270,11 +270,18 @@ export default class Canvas{
             const currentLabel = this.labels[index]
             //checks to see if the name of the labels match, but the IDs don't. This ensure that the currentLabel is not the exact same as the targetLabel
             if(currentLabel.name == targetLabel.name && currentLabel.id != targetLabel.id){
-                //sets the new colour of the targetLabel
+                //updates the colour of the targetLabel
                 targetLabel.config({
                     colour: currentLabel.colour
                 })
+                //updates the colour of the rectangle
+                const rectangle = this.findRectangle(id)
+                if(rectangle != null){
+                    rectangle.stroke(currentLabel.colour)
+                    this.rectangleLayer.draw()
+                }
                 return currentLabel.colour
+                
            }
         }
         colourCount += 1
@@ -282,6 +289,12 @@ export default class Canvas{
         targetLabel.config({
             colour: colours[colourCount%3]
         })
+        //updates the colour of the rectangle
+        const rectangle = this.findRectangle(id)
+        if(rectangle != null){
+            rectangle.stroke(colours[colourCount%3])
+            this.rectangleLayer.draw()
+        }
        return colours[colourCount%3]
     }
 
