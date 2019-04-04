@@ -217,45 +217,33 @@ export default class Canvas{
         this.rectangleLayer.draw();
         
     }
-    //TODO: Implement
-    convertScaleToSize(e){
-        console.log("Transforming something")
-        const rectangle = e.currentTarget
-        const scaleX = rectangle.scaleX()
-        const scaleY = rectangle.scaleY()
 
-        rectangle.size({
-            width: rectangle.width() * scaleX,
-            height: rectangle.height() * scaleY
-        })
+    ///Methods that involve the labels array
 
-        rectangle.position({
-            x: rectangle.x() + (scaleX - 1),
-            y: rectangle.y() + (scaleY - 1)
-        })
-
-        rectangle.scale({
-            x: 1,
-            y: 1
-        })
-    }
-
-    //Label Stuff
-
-    findRectangle(labelID){
+    /**
+     * Returns the rectangle with the given name. Null is returned if no rectangle with that name existd
+     * Note: The name of a rectangle should correspond to the ID of a label
+     * @param {string} name name of the rectangle to be returned 
+     */
+    findRectangle(name){
         const rectangles = this.rectangleLayer.getChildren(function(node){
             return node.getClassName() === 'Rect'
         })
         for(var index = 0;index < rectangles.length; index++){
             const rectangle = rectangles[index]
-            if(labelID == rectangle.name()){
+            if(name == rectangle.name()){
                 return rectangle
             }
         }
        return null
     }
 
+    /**
+     * Returns the label with the given ID or null if no label with that ID currently exists
+     * @param {string} labelID the ID of the label to be returned
+     */
     findLabel(labelID){
+        //Searches through the current labels and see if any IDs match the one provided.
         for(var index = 0; index < this.labels.length; index++){
             if(labelID == this.labels[index].id){
                 return this.labels[index]
@@ -263,65 +251,66 @@ export default class Canvas{
         }
         return null
     }
-
-
-    // updateLabel(id,config){
-    //     for(var index = 0; index < this.labels.length; index++){
-    //         const currentLabel = this.labels[index]
-    //         if(currentLabel.id === id){
-    //             currentLabel.config(config)
-    //             return true
-    //         }
-    //     }
-    //     return false
-    // }
-    
+ 
+    /**
+     * Returns the correct colour of label.
+     * If the label specificed has a name that matches an already existing one, that colour is returned. Otherwise, a new colour is returned.
+     * For example: If the label 'Car' with the colour 'red' attached to it exists and you pass in the ID of a label whose name is 'Car' red is returned.
+     * On the other hand, if you pass in the ID of a label with the name 'Person' and no other 'Person' label exists, a new colour which be returned and every 'Person label
+     * following would have that label returned to them.
+     * @param {string} id ID of the Label
+     */
     getLabelColour(id){
-        // this.updateLabel(id, {
-        //     name: string
-        // })
-       const labelInfo = null 
-       const targetLabel = this.findLabel(id) 
-       if(targetLabel == null){
+        const targetLabel = this.findLabel(id) 
+        if(targetLabel == null){
            return
         }
-
-       for(var index = 0; index < this.labels.length; index++ ){
-           const currentLabel = this.labels[index]
-           if(currentLabel.name == targetLabel.name && currentLabel.id != targetLabel.id){
-               console.log("Found old colour", targetLabel.name)
-               targetLabel.config({
-                   colour: currentLabel.colour
-               })
-            //    this.updateLabel(id, {
-            //        colour: currentLabel.colour
-            //    })
-               return currentLabel.colour
+        //Looks for an existing colour by looping through the current labels and comparing their name
+        for(var index = 0; index < this.labels.length; index++ ){
+            const currentLabel = this.labels[index]
+            //checks to see if the name of the labels match, but the IDs don't. This ensure that the currentLabel is not the exact same as the targetLabel
+            if(currentLabel.name == targetLabel.name && currentLabel.id != targetLabel.id){
+                //sets the new colour of the targetLabel
+                targetLabel.config({
+                    colour: currentLabel.colour
+                })
+                return currentLabel.colour
            }
-       }
+        }
         colourCount += 1
+        //sets the new colour of the target label
         targetLabel.config({
             colour: colours[colourCount%3]
         })
-        // this.updateLabel(id, {
-        //     colour: colours[colourCount%3]
-        // })
-        console.log("new  colour")
        return colours[colourCount%3]
-
     }
 
 }
+
+//Temporary
 var colourCount = -1
+
+/**
+ * Label that represents the name of a single rectangle.
+ * The the ID portion of the label should be the name of the rectangle it represents
+ */
 export class Label {
+    /**
+     * Creates a label
+     * @param {string} id name of the rectangle that the label represents
+     * @param {string} colour the colour associated to the object encapsulated by the rectangle
+     * @param {string} name the name of the object that the rectangle encapsulates
+     */
     constructor(id,colour,name){
         this.id = id
         this.colour = colour || "#3b1b1f" 
         this.name = name || ""
     }
+    /**
+     * Update the Label information 
+     * @param {*} config an object containing the new 'name' and/or colour of the label
+     */
     config(config){
-        console.log(config.name, "Update label name")
-
         this.colour = config.colour || this.colour
         this.name = config.name || this.name
     }

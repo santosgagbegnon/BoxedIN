@@ -68,17 +68,24 @@ container_div.addEventListener('mouseup', function(e){
     switch(tool){
         case 0:
             const label = canvas.finishCurrentRectangle()
-          
+            //Creates a new UI label if a rectangle was added to the canvas
             if(label != null){
+                //Creates a list item 
                 const label_listItem = document.createElement("LI")
+                
+                //Creates an input element (used for the list item's text)
                 const labelName_input = document.createElement("input")
+
+                //Setting attributes of the input and combining the DOM elements
                 labelName_input.className = "label-input"
                 labelName_input.value = "Unnamed"
-                labelName_input.id = label.id
+                labelName_input.id = label.id //Label's ID matches the corresponding rectangle's name
                 label_listItem.appendChild(labelName_input);
                 label_listItem.className = "label"
                 label_listItem.style.backgroundColor = label.colour
                 labels_list.appendChild(label_listItem)
+
+                //Event listener to update the colour and name of the label when the user changes the name
                 labelName_input.addEventListener("change", function(e){
                     const label = e.target
                     const list_item = e.target.parentNode
