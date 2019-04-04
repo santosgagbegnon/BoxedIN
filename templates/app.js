@@ -2,6 +2,8 @@
 ///Module imports
 
 import Canvas from "./canvas.js";
+import Label from "./canvas.js";
+
 
 /*
 Variables from the DOM.
@@ -65,7 +67,28 @@ container_div.addEventListener("mousemove", function(e){
 container_div.addEventListener('mouseup', function(e){
     switch(tool){
         case 0:
-            canvas.finishCurrentRectangle()
+            const label = canvas.finishCurrentRectangle()
+          
+            if(label != null){
+                const label_listItem = document.createElement("LI")
+                const labelName_input = document.createElement("input")
+                labelName_input.className = "label-input"
+                labelName_input.value = "Unnamed"
+                labelName_input.id = label.id
+                label_listItem.appendChild(labelName_input);
+                label_listItem.className = "label"
+                label_listItem.style.backgroundColor = label.colour
+                labels_list.appendChild(label_listItem)
+                labelName_input.addEventListener("change", function(e){
+                    const label = e.target
+                    const list_item = e.target.parentNode
+                    canvas.findLabel(label.id).config({
+                        name: label.value
+                    })
+                    list_item.style.backgroundColor = canvas.getLabelColour(label.id)
+                })
+               
+            }
             break;
 
         case 1:

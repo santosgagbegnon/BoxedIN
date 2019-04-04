@@ -1,10 +1,12 @@
 
+const colours = ["#ff553f","#663ce6", "#7ceb40"]
+
 /**
  * Class that represents a drawable canvas.
  * TODO:
  */
-class Canvas{
-    
+export default class Canvas{
+
     /**
      * Constructor for canvas 
      * @param {number} width width of the canvas.
@@ -30,14 +32,17 @@ class Canvas{
         //Sets the offset of the image to be the center.
         this.image.offsetX(this.image.width()/2)
 
+        this.labels = []
+
         //Base layer that only contains the image
         this.imageLayer = new Konva.Layer()
 
         //Scales the image to fit the canvas size
         const scale = this.scaleSize(this.stage, image)
+
         this.image.scale({
             x: scale,
-            y: scale
+            y: scale,
         })
 
         //adds image to imageLayer
@@ -59,7 +64,6 @@ class Canvas{
         this.stage.add(this.rectangleLayer)
 
         this.shouldResize = false
-
     }
     //TODO: Rename, move and comments
     clickTap(e){
@@ -86,6 +90,8 @@ class Canvas{
         this.rectangleLayer.add(transformer);
         transformer.attachTo(e.target);
         this.rectangleLayer.draw();
+        console.log("(", e.target.width(), ",", e.target.height(), ")")
+
     }
     /**
      * Creates a new rectangle. This method is meant to be called when the canvas is clicked on.
@@ -98,7 +104,7 @@ class Canvas{
             y: this.stage.getPointerPosition().y,
             width: 0,
             height: 0,
-            stroke: 'red',
+            stroke: '#3b1b1f',
             strokeWidth: 2
           });
         
@@ -168,10 +174,12 @@ class Canvas{
             })
         })
 
-
+        const rectangleLabel = new Label(rectangleName,null,null)
+        this.labels.push(rectangleLabel)
+     
         //resets the current rectangle to null
         this.currentRectangle = null
-        return rectangleName
+        return rectangleLabel
     }
     /**
      * Calculates the value to scale the image by to have it fill the stage while not being stretched
@@ -207,12 +215,114 @@ class Canvas{
             }
         }
         this.rectangleLayer.draw();
+        
     }
     //TODO: Implement
     convertScaleToSize(e){
         console.log("Transforming something")
+        const rectangle = e.currentTarget
+        const scaleX = rectangle.scaleX()
+        const scaleY = rectangle.scaleY()
+
+        rectangle.size({
+            width: rectangle.width() * scaleX,
+            height: rectangle.height() * scaleY
+        })
+
+        rectangle.position({
+            x: rectangle.x() + (scaleX - 1),
+            y: rectangle.y() + (scaleY - 1)
+        })
+
+        rectangle.scale({
+            x: 1,
+            y: 1
+        })
+    }
+
+    //Label Stuff
+
+    findRectangle(labelID){
+        const rectangles = this.rectangleLayer.getChildren(function(node){
+            return node.getClassName() === 'Rect'
+        })
+        for(var index = 0;index < rectangles.length; index++){
+            const rectangle = rectangles[index]
+            if(labelID == rectangle.name()){
+                return rectangle
+            }
+        }
+       return null
+    }
+
+    findLabel(labelID){
+        for(var index = 0; index < this.labels.length; index++){
+            if(labelID == this.labels[index].id){
+                return this.labels[index]
+            }
+        }
+        return null
+    }
+
+
+    // updateLabel(id,config){
+    //     for(var index = 0; index < this.labels.length; index++){
+    //         const currentLabel = this.labels[index]
+    //         if(currentLabel.id === id){
+    //             currentLabel.config(config)
+    //             return true
+    //         }
+    //     }
+    //     return false
+    // }
+    
+    getLabelColour(id){
+        // this.updateLabel(id, {
+        //     name: string
+        // })
+       const labelInfo = null 
+       const targetLabel = this.findLabel(id) 
+       if(targetLabel == null){
+           return
+        }
+
+       for(var index = 0; index < this.labels.length; index++ ){
+           const currentLabel = this.labels[index]
+           if(currentLabel.name == targetLabel.name && currentLabel.id != targetLabel.id){
+               console.log("Found old colour", targetLabel.name)
+               targetLabel.config({
+                   colour: currentLabel.colour
+               })
+            //    this.updateLabel(id, {
+            //        colour: currentLabel.colour
+            //    })
+               return currentLabel.colour
+           }
+       }
+        colourCount += 1
+        targetLabel.config({
+            colour: colours[colourCount%3]
+        })
+        // this.updateLabel(id, {
+        //     colour: colours[colourCount%3]
+        // })
+        console.log("new  colour")
+       return colours[colourCount%3]
+
     }
 
 }
+var colourCount = -1
+export class Label {
+    constructor(id,colour,name){
+        this.id = id
+        this.colour = colour || "#3b1b1f" 
+        this.name = name || ""
+    }
+    config(config){
+        console.log(config.name, "Update label name")
 
-export default Canvas
+        this.colour = config.colour || this.colour
+        this.name = config.name || this.name
+    }
+}
