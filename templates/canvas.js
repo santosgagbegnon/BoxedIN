@@ -238,6 +238,11 @@ export default class Canvas{
        return null
     }
 
+    destroyRectangle(name){
+        this.findRectangle(name).destroy()
+        this.rectangleLayer.draw()
+    }
+
     /**
      * Returns the label with the given ID or null if no label with that ID currently exists
      * @param {string} labelID the ID of the label to be returned
@@ -289,7 +294,6 @@ export default class Canvas{
         }
        return newColour || colours[colourCount%3] 
     }
-
 }
 
 //Temporary

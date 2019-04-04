@@ -72,15 +72,37 @@ container_div.addEventListener('mouseup', function(e){
             if(label != null){
                 //Creates a list item 
                 const label_listItem = document.createElement("LI")
-                
+
                 //Creates an input element (used for the list item's text)
                 const labelName_input = document.createElement("input")
+
+                const trash_button = document.createElement("input")
+                trash_button.className = "trash-button"
+                trash_button.type = "image"
+                trash_button.src = "https://findicons.com/files/icons/1580/devine_icons_part_2/128/trash_recyclebin_empty_closed.png"
+                trash_button.addEventListener("click",function(e){
+                    console.log(e.target.parentNode.querySelector(".label-input").value)
+                    const labelID = e.target.parentNode.querySelector(".label-input").id
+                    canvas.destroyRectangle(labelID)
+                    e.target.parentNode.remove()
+
+                })
+                // trash_button.style.visibility = "tr"
+
+                // label_listItem.addEventListener("mouseover", doSomething)                
+                // labelName_input.addEventListener("mouseover", doSomething)
+                // trash_button.addEventListener("mouseover", doSomething)
+
+                // label_listItem.addEventListener("mouseout", doSomethingElse)
+                // labelName_input.addEventListener("mouseout", doSomethingElse)
+                // trash_button.addEventListener("mouseout", doSomethingElse)
 
                 //Setting attributes of the input and combining the DOM elements
                 labelName_input.className = "label-input"
                 labelName_input.value = "Unnamed"
                 labelName_input.id = label.id //Label's ID matches the corresponding rectangle's name
                 label_listItem.appendChild(labelName_input);
+                label_listItem.appendChild(trash_button)
                 label_listItem.className = "label"
                 label_listItem.style.backgroundColor = label.colour
                 labels_list.appendChild(label_listItem)
@@ -119,4 +141,20 @@ function imageLoaded(){
     })
     
     
+}
+
+function doSomething(e){
+    console.log("Mouse is over")
+    const trash_button = e.target.querySelector(".trash-button")
+    if(trash_button != null && trash_button.style.visibility != "visible"){
+        trash_button.style.visibility = "visible"
+    }
+}
+
+function doSomethingElse(e){
+    console.log("Mouse is over")
+    const trash_button = e.target.querySelector(".trash-button")
+    if(trash_button != null && trash_button.style.visibility != "hidden"){
+        trash_button.style.visibility = "hidden"
+    }
 }
