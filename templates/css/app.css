@@ -127,7 +127,6 @@ header {
 
 canvas {
 	padding: 0px;
-	overflow: scroll;
 	/* position: fixed; */
 	background: red; 
 	height: 100%;
@@ -149,7 +148,7 @@ canvas {
 }
 
 #container{
-	background-color: black;
+	background-color: greenyellow;
 	left: 20%;
 	right: 0;
 	top: 50px;

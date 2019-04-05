@@ -23,6 +23,12 @@ const previous_button = document.getElementById("previous-button")
 let canvas = null
 
 let tool = 0 //Represebts which tool is active, 0: Draw, 1: Move, 2: Resizing
+
+window.addEventListener("resize",function(e){
+    
+    canvas.updateStage(container_div.offsetWidth,container_div.offsetHeight)
+    console.log(container_div.offsetHeight, "HEIGHT")
+})
 //Temporary: Allows user to toggle between the 3 options 
 export_button.addEventListener("click", function(){
     tool = (tool + 1) % 2
@@ -87,15 +93,6 @@ container_div.addEventListener('mouseup', function(e){
                     e.target.parentNode.remove()
 
                 })
-                // trash_button.style.visibility = "tr"
-
-                // label_listItem.addEventListener("mouseover", doSomething)                
-                // labelName_input.addEventListener("mouseover", doSomething)
-                // trash_button.addEventListener("mouseover", doSomething)
-
-                // label_listItem.addEventListener("mouseout", doSomethingElse)
-                // labelName_input.addEventListener("mouseout", doSomethingElse)
-                // trash_button.addEventListener("mouseout", doSomethingElse)
 
                 //Setting attributes of the input and combining the DOM elements
                 labelName_input.className = "label-input"
@@ -135,26 +132,11 @@ imageObject.onload = imageLoaded
 
 function imageLoaded(){
     canvas = new Canvas(container_div.offsetWidth,container_div.offsetHeight,imageObject)
+    console.log("width:", container_div.offsetWidth, " height:", container_div.offsetHeight)
     canvas.stage.on('click tap', function (e) {
         console.log("Click tap")
         canvas.clickTap(e)
     })
     
     
-}
-
-function doSomething(e){
-    console.log("Mouse is over")
-    const trash_button = e.target.querySelector(".trash-button")
-    if(trash_button != null && trash_button.style.visibility != "visible"){
-        trash_button.style.visibility = "visible"
-    }
-}
-
-function doSomethingElse(e){
-    console.log("Mouse is over")
-    const trash_button = e.target.querySelector(".trash-button")
-    if(trash_button != null && trash_button.style.visibility != "hidden"){
-        trash_button.style.visibility = "hidden"
-    }
 }
