@@ -193,12 +193,6 @@ export default class Canvas{
         return Math.max(widthRatio, heightRatio)
     }
 
-    scaleSizeTwo(stage, imageObject){
-        //calculates the stage:imageObject ratios
-        const widthRatio = stage.width() / imageObject.width
-        const heightRatio = stage.height() / imageObject.height
-        return Math.max(widthRatio, heightRatio)
-    }
     /**
      * Sets whether or not the user is able to drag and resize rectangles
      * @param {boolean} shouldEdit true if the canvas should be editable, otherwise false
@@ -281,7 +275,7 @@ export default class Canvas{
         for(var index = 0; index < this.labels.length; index++ ){
             const currentLabel = this.labels[index]
             //checks to see if the name of the labels match, but the IDs don't. This ensure that the currentLabel is not the exact same as the targetLabel
-            if(currentLabel.name == targetLabel.name && currentLabel.id != targetLabel.id){
+            if(currentLabel.name.trim().toLowerCase() == targetLabel.name.trim().toLowerCase() && currentLabel.id != targetLabel.id){
                 newColour = currentLabel.colour
                 break
            }
@@ -307,15 +301,15 @@ export default class Canvas{
             width: width,
             height: height
         })
-
         //Scales the image to fit the canvas size
         const scale = this.scaleSize(this.stage, this.image.image())
+      
         console.log("SCALE", scale)
         this.image.scale({
             x: scale,
             y: scale,
         })
-
+        this.image.x(this.image.width()*scale/2)
         this.stage.draw()
     }
 }

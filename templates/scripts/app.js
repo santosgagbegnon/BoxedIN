@@ -21,7 +21,6 @@ const export_button = document.getElementById("export-button")
 const next_butotn = document.getElementById("next-button")
 const previous_button = document.getElementById("previous-button")
 let canvas = null
-
 let tool = 0 //Represebts which tool is active, 0: Draw, 1: Move, 2: Resizing
 
 window.addEventListener("resize",function(e){
@@ -91,7 +90,6 @@ container_div.addEventListener('mouseup', function(e){
                     const labelID = e.target.parentNode.querySelector(".label-input").id
                     canvas.destroyRectangle(labelID)
                     e.target.parentNode.remove()
-
                 })
 
                 //Setting attributes of the input and combining the DOM elements
@@ -128,7 +126,6 @@ container_div.addEventListener('mouseup', function(e){
 const imageObject = new Image()
 imageObject.src = "assets/default.jpg" 
 imageObject.onload = imageLoaded
-
 
 function imageLoaded(){
     canvas = new Canvas(container_div.offsetWidth,container_div.offsetHeight,imageObject)
