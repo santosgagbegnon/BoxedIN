@@ -124,7 +124,7 @@ container_div.addEventListener('mouseup', function(e){
 })
 
 const imageObject = new Image()
-imageObject.src = "assets/default.jpg" 
+imageObject.src = "../assets/default.jpg" 
 imageObject.onload = imageLoaded
 
 function imageLoaded(){
