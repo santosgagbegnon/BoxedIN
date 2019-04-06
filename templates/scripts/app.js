@@ -38,6 +38,7 @@ export_button.addEventListener("click", function(){
 
 //Adding event listeners
 container_div.addEventListener("mousedown", function(e){
+    e.preventDefault()
     if(canvas == null){return}
     switch(tool){
         case 0:
@@ -55,6 +56,7 @@ container_div.addEventListener("mousedown", function(e){
 })
 
 container_div.addEventListener("mousemove", function(e){
+    e.preventDefault()
     if(canvas == null){return}
     switch(tool){
         case 0:
@@ -69,7 +71,8 @@ container_div.addEventListener("mousemove", function(e){
     }
 })
 
-container_div.addEventListener('mouseup', function(e){
+$("#container").on('mouseup mouseleave', function(e){
+    console.log("mouse is up")
     switch(tool){
         case 0:
             const label = canvas.finishCurrentRectangle()
@@ -133,6 +136,4 @@ function imageLoaded(){
     canvas.stage.on('click tap', function (e) {
         canvas.clickTap(e)
     })
-    
-    
 }
