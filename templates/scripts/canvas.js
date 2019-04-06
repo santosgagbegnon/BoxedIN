@@ -16,6 +16,7 @@ export default class Canvas{
     constructor(width,height,image){
         //Creating the stage for the canvas (object that will contain all of the layers)
         this.stage = new Konva.Stage({
+            id: "stage",
             container: "container",
             width: width,
             height: height,
@@ -89,6 +90,7 @@ export default class Canvas{
 
         this.rectangleLayer.add(transformer);
         transformer.attachTo(e.target);
+        console.log(e.target)
         this.rectangleLayer.draw();
     }
     /**
@@ -103,9 +105,9 @@ export default class Canvas{
             width: 0,
             height: 0,
             stroke: defaultColour,
-            strokeWidth: 2
+            strokeWidth: 2,
           });
-        
+
         //adds the rectangle to the layer
         this.rectangleLayer.add(this.currentRectangle)
         this.rectangleLayer.draw()
@@ -137,8 +139,11 @@ export default class Canvas{
      * the current rectangle from the canvas and return null. 
      */
     finishCurrentRectangle(){
-        //Checks if the rectangle exists and has a size
-        if(this.currentRectangle == null || this.currentRectangle.width() == 0 || this.currentRectangle.height == 0){
+        //Checks if a rectangle was created
+        if(this.currentRectangle == null){ return null }
+
+        //Checks if the rectangle has a size and width, if not it's destoryed.
+        if(this.currentRectangle.width() == 0 || this.currentRectangle.height == 0){
             this.currentRectangle.destroy()
             return null
         }
@@ -211,6 +216,7 @@ export default class Canvas{
             for(var index = 0; index < rectangles.length; index++){
                 rectangles[index].draggable(false)
             }
+            this.stage.find("Transformer").destroy()
         }
         this.rectangleLayer.draw();
         
@@ -238,6 +244,7 @@ export default class Canvas{
 
     destroyRectangle(name){
         this.findRectangle(name).destroy()
+        this.stage.find("Transformer").destroy()
         this.rectangleLayer.draw()
     }
 

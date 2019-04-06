@@ -20,21 +20,27 @@ const labels_list = document.getElementById("labels-list")
 const export_button = document.getElementById("export-button")
 const next_butotn = document.getElementById("next-button")
 const previous_button = document.getElementById("previous-button")
+const toolToggle_checkbox = document.getElementById("tool-toggle")
+
 let canvas = null
 let tool = 0 //Represebts which tool is active, 0: Draw, 1: Move, 2: Resizing
 
 window.addEventListener("resize",function(e){
-    
     canvas.updateStage(container_div.offsetWidth,container_div.offsetHeight)
-    console.log(container_div.offsetHeight, "HEIGHT")
 })
-//Temporary: Allows user to toggle between the 3 options 
-export_button.addEventListener("click", function(){
-    tool = (tool + 1) % 2
-    if(tool == 1){
+
+toolToggle_checkbox.addEventListener("change", function(e){
+    if(event.target.checked){
+        tool = 1
         canvas.editable(true)
     }
+    else{
+        tool = 0
+        canvas.editable(false)
+    }
 })
+
+
 
 //Adding event listeners
 container_div.addEventListener("mousedown", function(e){
@@ -56,7 +62,6 @@ container_div.addEventListener("mousedown", function(e){
 })
 
 container_div.addEventListener("mousemove", function(e){
-    e.preventDefault()
     if(canvas == null){return}
     switch(tool){
         case 0:
@@ -72,7 +77,6 @@ container_div.addEventListener("mousemove", function(e){
 })
 
 $("#container").on('mouseup mouseleave', function(e){
-    console.log("mouse is up")
     switch(tool){
         case 0:
             const label = canvas.finishCurrentRectangle()
@@ -89,7 +93,6 @@ $("#container").on('mouseup mouseleave', function(e){
                 trash_button.type = "image"
                 trash_button.src = "https://findicons.com/files/icons/1580/devine_icons_part_2/128/trash_recyclebin_empty_closed.png"
                 trash_button.addEventListener("click",function(e){
-                    console.log(e.target.parentNode.querySelector(".label-input").value)
                     const labelID = e.target.parentNode.querySelector(".label-input").id
                     canvas.destroyRectangle(labelID)
                     e.target.parentNode.remove()
@@ -132,7 +135,6 @@ imageObject.onload = imageLoaded
 
 function imageLoaded(){
     canvas = new Canvas(container_div.offsetWidth,container_div.offsetHeight,imageObject)
-    console.log("width:", container_div.offsetWidth, " height:", container_div.offsetHeight)
     canvas.stage.on('click tap', function (e) {
         canvas.clickTap(e)
     })
