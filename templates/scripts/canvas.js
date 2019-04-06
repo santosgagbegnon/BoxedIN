@@ -1,9 +1,9 @@
 
 const colours = ["#ff553f","#663ce6", "#7ceb40"]
+const defaultColour = "#8de874"
 
 /**
  * Class that represents a drawable canvas.
- * TODO:
  */
 export default class Canvas{
 
@@ -90,8 +90,6 @@ export default class Canvas{
         this.rectangleLayer.add(transformer);
         transformer.attachTo(e.target);
         this.rectangleLayer.draw();
-        console.log("(", e.target.width(), ",", e.target.height(), ")")
-
     }
     /**
      * Creates a new rectangle. This method is meant to be called when the canvas is clicked on.
@@ -104,7 +102,7 @@ export default class Canvas{
             y: this.stage.getPointerPosition().y,
             width: 0,
             height: 0,
-            stroke: '#3b1b1f',
+            stroke: defaultColour,
             strokeWidth: 2
           });
         
@@ -296,6 +294,12 @@ export default class Canvas{
     }
 
     //TODO: Add comments
+    /**
+     * Updates the stage's width/height and scales the image given an updated with and height. 
+     * This width and height should come from the div that contains the stage.
+     * @param {number} width 
+     * @param {number} height 
+     */
     updateStage(width,height){
         this.stage.size({
             width: width,
@@ -304,11 +308,11 @@ export default class Canvas{
         //Scales the image to fit the canvas size
         const scale = this.scaleSize(this.stage, this.image.image())
       
-        console.log("SCALE", scale)
         this.image.scale({
             x: scale,
             y: scale,
         })
+
         this.image.x(this.image.width()*scale/2)
         this.stage.draw()
     }
@@ -330,7 +334,7 @@ export class Label {
      */
     constructor(id,colour,name){
         this.id = id
-        this.colour = colour || "#3b1b1f" 
+        this.colour = colour || defaultColour
         this.name = name || ""
     }
     /**

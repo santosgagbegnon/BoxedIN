@@ -131,7 +131,6 @@ function imageLoaded(){
     canvas = new Canvas(container_div.offsetWidth,container_div.offsetHeight,imageObject)
     console.log("width:", container_div.offsetWidth, " height:", container_div.offsetHeight)
     canvas.stage.on('click tap', function (e) {
-        console.log("Click tap")
         canvas.clickTap(e)
     })
     
