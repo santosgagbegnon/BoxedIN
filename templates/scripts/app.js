@@ -29,8 +29,34 @@ window.addEventListener("resize",function(e){
     canvas.updateStage(container_div.offsetWidth,container_div.offsetHeight)
 })
 
+document.addEventListener("keypress", function(e){
+    const unicode = e.which 
+    switch (unicode) {
+        //Pressed D/d
+        case 68,100:
+            if(toolToggle_checkbox.checked){
+                toolToggle_checkbox.checked = false
+                tool = 0
+                canvas.editable(false)
+            }
+            break
+        //Pressed R/r
+        case 82,114:
+            if(!toolToggle_checkbox.checked){
+                toolToggle_checkbox.checked = true
+                console.log("r")
+                tool = 1
+                canvas.editable(true)
+            }
+            break
+        default:
+            break
+    }
+})
+
 toolToggle_checkbox.addEventListener("change", function(e){
-    if(event.target.checked){
+    console.log("changed")
+    if(e.target.checked){
         tool = 1
         canvas.editable(true)
     }
