@@ -4,6 +4,34 @@
 import Canvas from "./canvas.js";
 import Label from "./canvas.js";
 
+var input = document.getElementById('file');
+
+input.onchange = function(e) {
+    let files = e.target.files 
+    files = Array.from(files).filter( function(s){ 
+        return s.type.includes("image") ;
+    });
+    handle(files)
+}
+
+function handle(files) {
+    console.log(files)
+    const reader = new FileReader()
+    reader.onload = function() {
+        console.log("Loaded file")
+        const image = new Image()
+        image.src = reader.result
+        image.onload = function(){
+            canvas = new Canvas(window.innerWidth,window.innerHeight - 50,image)
+            canvas.stage.on('click tap', function (e) {
+                canvas.clickTap(e)
+            })
+
+        }
+        
+    }
+    reader.readAsDataURL(files[0])
+}
 
 /*
 Variables from the DOM.
@@ -26,7 +54,7 @@ let canvas = null
 let tool = 0 //Represebts which tool is active, 0: Draw, 1: Move, 2: Resizing
 
 window.addEventListener("resize",function(e){
-    canvas.updateStage(container_div.offsetWidth,container_div.offsetHeight)
+    canvas.updateStage(window.innerWidth,window.innerHeight - 50)
 })
 
 document.addEventListener("keypress", function(e){
@@ -65,7 +93,6 @@ toolToggle_checkbox.addEventListener("change", function(e){
         canvas.editable(false)
     }
 })
-
 
 
 //Adding event listeners
@@ -155,11 +182,11 @@ $("#container").on('mouseup mouseleave', function(e){
     }
 })
 
-const imageObject = new Image()
-imageObject.src = "../assets/default.jpg" 
-imageObject.onload = imageLoaded
+// const imageObject = new Image()
+// imageObject.src = "../assets/default.jpg" 
+// imageObject.onload = imageLoaded
 
-function imageLoaded(){
+function handleImage(image){
     canvas = new Canvas(container_div.offsetWidth,container_div.offsetHeight,imageObject)
     canvas.stage.on('click tap', function (e) {
         canvas.clickTap(e)

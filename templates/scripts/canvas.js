@@ -14,32 +14,35 @@ export default class Canvas{
      * @param {Image} image the base image that will be drawn on.
      */
     constructor(width,height,image){
+        //Scales the image to fit the canvas size
+        const scale = this.scaleSize(width,height,image)
+
         //Creating the stage for the canvas (object that will contain all of the layers)
         this.stage = new Konva.Stage({
             id: "stage",
             container: "container",
-            width: width,
-            height: height,
+            width: image.width * scale,
+            height: image.height * scale,
         })
 
         //Creates the baseline image of the canvas
         this.image = new Konva.Image({
             image: image,
             x: this.stage.width()/2,
-            y: 0,
+            y: this.stage.height()/2,
             width: image.width,
             height: image.height,
         })
         //Sets the offset of the image to be the center.
         this.image.offsetX(this.image.width()/2)
 
+        this.image.offsetY(this.image.height()/2)
+
+
         this.labels = []
 
         //Base layer that only contains the image
         this.imageLayer = new Konva.Layer()
-
-        //Scales the image to fit the canvas size
-        const scale = this.scaleSize(this.stage, image)
 
         this.image.scale({
             x: scale,
@@ -106,6 +109,28 @@ export default class Canvas{
             height: 0,
             stroke: defaultColour,
             strokeWidth: 2,
+            dragBoundFunc: function(pos) {
+                const maxX = this.getParent().getParent().width() - this.width()
+                const maxY = this.getParent().getParent().height() - this.height()
+                const newX = pos.x 
+                const newY = pos.y
+                if(newX < 0){
+                    newX = 0
+                }
+                if(newX > maxX){
+                    newX = maxX
+                }
+                if(newY < 0){
+                    newY = 0
+                }
+                if(newY > maxY){
+                    newY = maxY
+                }
+                return {
+                  x: newX,
+                  y: newY
+                };
+              }
           });
 
         //adds the rectangle to the layer
@@ -189,11 +214,11 @@ export default class Canvas{
      * @param {Konva.Stage} stage the stage containing the image
      * @param {Image} imageObject image to be scaled
      */
-    scaleSize(stage, imageObject){
+    scaleSize(width, height, imageObject){
         //calculates the stage:imageObject ratios
-        const widthRatio = stage.width() / imageObject.width
-        const heightRatio = stage.height() / imageObject.height
-        return Math.max(widthRatio, heightRatio)
+        const widthRatio = width / imageObject.width
+        const heightRatio = height / imageObject.height
+        return Math.min(widthRatio, heightRatio)
     }
 
     /**
@@ -308,12 +333,13 @@ export default class Canvas{
      * @param {number} height 
      */
     updateStage(width,height){
-        this.stage.size({
-            width: width,
-            height: height
-        })
         //Scales the image to fit the canvas size
-        const scale = this.scaleSize(this.stage, this.image.image())
+        const scale = this.scaleSize(width, height, this.image.image())
+
+        this.stage.scale({
+            width: this.stage.width()*20,
+            height: this.stage.height()*20
+        })
       
         this.image.scale({
             x: scale,
@@ -321,6 +347,8 @@ export default class Canvas{
         })
 
         this.image.x(this.image.width()*scale/2)
+        this.image.y(this.image.height ()*scale/2)
+
         this.stage.draw()
     }
 }
