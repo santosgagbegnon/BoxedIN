@@ -4,35 +4,6 @@
 import Canvas from "./canvas.js";
 import Label from "./canvas.js";
 
-var input = document.getElementById('file');
-
-input.onchange = function(e) {
-    let files = e.target.files 
-    files = Array.from(files).filter( function(s){ 
-        return s.type.includes("image") ;
-    });
-    handle(files)
-}
-
-function handle(files) {
-    console.log(files)
-    const reader = new FileReader()
-    reader.onload = function() {
-        console.log("Loaded file")
-        const image = new Image()
-        image.src = reader.result
-        image.onload = function(){
-            canvas = new Canvas(window.innerWidth,window.innerHeight - 50,image)
-            canvas.stage.on('click tap', function (e) {
-                canvas.clickTap(e)
-            })
-
-        }
-        
-    }
-    reader.readAsDataURL(files[0])
-}
-
 /*
 Variables from the DOM.
 
@@ -46,15 +17,44 @@ const undo_button = document.getElementById("undo-button")
 const redo_button = document.getElementById("redo-button")
 const labels_list = document.getElementById("labels-list")
 const export_button = document.getElementById("export-button")
-const next_butotn = document.getElementById("next-button")
 const previous_button = document.getElementById("previous-button")
+const next_button = document.getElementById("next-button")
 const toolToggle_checkbox = document.getElementById("tool-toggle")
+const imagesInput = document.getElementById('file');
+let files = imagesInput.files
 
-let canvas = null
-let tool = 0 //Represebts which tool is active, 0: Draw, 1: Move, 2: Resizing
+let currentCanvas = null
+let tool = 0 //Represents which tool is active, 0: Draw, 1: Move/Resizing
+let imageNumber = 0
+let canvases = []
+next_button.addEventListener("mousedown", function(e){
+    console.log("Move to next image")
+    imageNumber ++
+    console.log(files.length)
+    if(imageNumber >= files.length){
+        console.log("End of images, please export.")
+        imageNumber --
+        return
+    }
+    detachCanvas()
+    handle(files[imageNumber])
+})
+
+imagesInput.onchange = function(e) {
+    files = Array.from(this.files).filter( function(s){ 
+        return s.type.includes("image") ;
+    });
+    console.log(files, "Found files")
+    handle(files[0])
+}
+
+
+function detachCanvas(){
+    currentCanvas.stage.removeChildren()
+}
 
 window.addEventListener("resize",function(e){
-    canvas.updateStage(window.innerWidth,window.innerHeight - 50)
+    currentCanvas.updateStage(window.innerWidth,window.innerHeight - 50)
 })
 
 document.addEventListener("keypress", function(e){
@@ -65,7 +65,7 @@ document.addEventListener("keypress", function(e){
             if(toolToggle_checkbox.checked){
                 toolToggle_checkbox.checked = false
                 tool = 0
-                canvas.editable(false)
+                currentCanvas.editable(false)
             }
             break
         //Pressed R/r
@@ -74,7 +74,7 @@ document.addEventListener("keypress", function(e){
                 toolToggle_checkbox.checked = true
                 console.log("r")
                 tool = 1
-                canvas.editable(true)
+                currentCanvas.editable(true)
             }
             break
         default:
@@ -86,11 +86,11 @@ toolToggle_checkbox.addEventListener("change", function(e){
     console.log("changed")
     if(e.target.checked){
         tool = 1
-        canvas.editable(true)
+        currentCanvas.editable(true)
     }
     else{
         tool = 0
-        canvas.editable(false)
+        currentCanvas.editable(false)
     }
 })
 
@@ -98,15 +98,15 @@ toolToggle_checkbox.addEventListener("change", function(e){
 //Adding event listeners
 container_div.addEventListener("mousedown", function(e){
     e.preventDefault()
-    if(canvas == null){return}
+    if(currentCanvas == null){return}
     switch(tool){
         case 0:
-            canvas.editable(false)
-            canvas.createRectangle()
+            currentCanvas.editable(false)
+            currentCanvas.createRectangle()
             break
 
         case 1:
-            canvas.editable(true)
+            currentCanvas.editable(true)
             break
 
         default:
@@ -115,10 +115,10 @@ container_div.addEventListener("mousedown", function(e){
 })
 
 container_div.addEventListener("mousemove", function(e){
-    if(canvas == null){return}
+    if(currentCanvas == null){return}
     switch(tool){
         case 0:
-            canvas.updateRectangle(e)
+            currentCanvas.updateRectangle(e)
             break;
 
         case 1:
@@ -132,7 +132,7 @@ container_div.addEventListener("mousemove", function(e){
 $("#container").on('mouseup mouseleave', function(e){
     switch(tool){
         case 0:
-            const label = canvas.finishCurrentRectangle()
+            const label = currentCanvas.finishCurrentRectangle()
             //Creates a new UI label if a rectangle was added to the canvas
             if(label != null){
                 //Creates a list item 
@@ -147,7 +147,7 @@ $("#container").on('mouseup mouseleave', function(e){
                 trash_button.src = "https://findicons.com/files/icons/1580/devine_icons_part_2/128/trash_recyclebin_empty_closed.png"
                 trash_button.addEventListener("click",function(e){
                     const labelID = e.target.parentNode.querySelector(".label-input").id
-                    canvas.destroyRectangle(labelID)
+                    currentCanvas.destroyRectangle(labelID)
                     e.target.parentNode.remove()
                 })
 
@@ -165,10 +165,10 @@ $("#container").on('mouseup mouseleave', function(e){
                 labelName_input.addEventListener("change", function(e){
                     const label = e.target
                     const list_item = e.target.parentNode
-                    canvas.findLabel(label.id).config({
+                    currentCanvas.findLabel(label.id).config({
                         name: label.value
                     })
-                    list_item.style.backgroundColor = canvas.getLabelColour(label.id)
+                    list_item.style.backgroundColor = currentCanvas.getLabelColour(label.id)
                 })
                
             }
@@ -182,9 +182,32 @@ $("#container").on('mouseup mouseleave', function(e){
     }
 })
 
-// const imageObject = new Image()
-// imageObject.src = "../assets/default.jpg" 
-// imageObject.onload = imageLoaded
+/**
+ * 
+ */
+
+function handle(file) {
+    console.log(file)
+    const reader = new FileReader()
+    reader.onload = function() {
+        console.log("Loaded file")
+        const image = new Image()
+        image.src = reader.result
+        image.onload = function(){
+            const newCanvas = new Canvas(window.innerWidth,window.innerHeight - 50,image)
+            newCanvas.stage.on('click tap', function (e) {
+                newCanvas.clickTap(e)
+            })
+            currentCanvas = newCanvas
+            canvases.push(newCanvas)
+
+        }
+        
+    }
+    reader.readAsDataURL(file)
+}
+
+
 
 function handleImage(image){
     canvas = new Canvas(container_div.offsetWidth,container_div.offsetHeight,imageObject)
