@@ -96,22 +96,6 @@ imagesInput.onchange = function(e) {
 }
 
 /**
- * Removes all of the labels from the right sidebar 
- */
-function removeLabels(){
-    while (labels_list.firstChild) {
-        labels_list.removeChild(labels_list.firstChild);
-    }
-}
-/**
- * Removes the current canvas from the content box by removing the whole div that contains the canvas
- */
-function detachCanvas(){
-    //Removes everything from the content box
-    contentBox.removeChild(contentBox.querySelector("#container"))
-}
-
-/**
  * Event listener that listens for the window being resized.
  * When this occurs, the canvas stage's size is updated
  */
@@ -166,7 +150,7 @@ toolToggle_checkbox.addEventListener("change", function(e){
     }
 })
 
-//Adding event listeners
+//EVENT LISTENERS FOR CANVAS DIV
 
 /**
  * Method called when there is a mouse down event on the canvas' div
@@ -275,6 +259,21 @@ function canvasDivMouseUp(e){
 
 }
 
+/**
+ * Removes all of the labels from the right sidebar 
+ */
+function removeLabels(){
+    while (labels_list.firstChild) {
+        labels_list.removeChild(labels_list.firstChild);
+    }
+}
+/**
+ * Removes the current canvas from the content box by removing the whole div that contains the canvas
+ */
+function detachCanvas(){
+    //Removes everything from the content box
+    contentBox.removeChild(contentBox.querySelector("#container"))
+}
 /**
  * Checks if there is an existing canvas at the given index. If there is, that canvas is placed back
  * on display to the user. 
