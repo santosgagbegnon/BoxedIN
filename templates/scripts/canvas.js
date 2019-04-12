@@ -101,7 +101,7 @@ export default class Canvas{
     /**
      * Method that should be called when the user performs a click tap event on th canvas'stage. 
      * It will remove all transformers from the stage and if a rectangle was selected, a new transformer
-     * will be added to that rectangle.
+     * will be added to that
      * @param {*} e Click tap event
      */
     handleTransformers(e){
@@ -303,8 +303,17 @@ export default class Canvas{
 
     destroyRectangle(name){
         this.findRectangle(name).destroy()
+        this.removeLabel(this.findLabel(name))
+        this.findLabel(name)
         this.stage.find("Transformer").destroy()
         this.rectangleLayer.draw()
+    }
+
+    removeLabel(label){
+        var index = this.labels.indexOf(label);
+        if (index <= -1) {return}
+        this.labels.splice(index, 1);
+        console.log("deleted")
     }
 
     /**

@@ -213,42 +213,7 @@ function canvasDivMouseUp(e){
             const label = currentCanvas.finishCurrentRectangle()
             //Creates a new UI label if a rectangle was added to the canvas
             if(label != null){
-                //Creates a list item 
-                const label_listItem = document.createElement("LI")
-
-                //Creates an input element (used for the list item's text)
-                const labelName_input = document.createElement("input")
-
-                const trash_button = document.createElement("input")
-                trash_button.className = "trash-button"
-                trash_button.type = "image"
-                trash_button.src = "https://findicons.com/files/icons/1580/devine_icons_part_2/128/trash_recyclebin_empty_closed.png"
-                trash_button.addEventListener("click",function(e){
-                    const labelID = e.target.parentNode.querySelector(".label-input").id
-                    currentCanvas.destroyRectangle(labelID)
-                    e.target.parentNode.remove()
-                })
-
-                //Setting attributes of the input and combining the DOM elements
-                labelName_input.className = "label-input"
-                labelName_input.value = "Unnamed"
-                labelName_input.id = label.id //Label's ID matches the corresponding rectangle's name
-                label_listItem.appendChild(labelName_input);
-                label_listItem.appendChild(trash_button)
-                label_listItem.className = "label"
-                label_listItem.style.backgroundColor = label.colour
-                labels_list.appendChild(label_listItem)
-
-                //Event listener to update the colour and name of the label when the user changes the name
-                labelName_input.addEventListener("change", function(e){
-                    const label = e.target
-                    const list_item = e.target.parentNode
-                    currentCanvas.findLabel(label.id).config({
-                        name: label.value
-                    })
-                    list_item.style.backgroundColor = currentCanvas.getLabelColour(label.id)
-                })
-               
+                createLabelElement(label)
             }
             break;
 
@@ -275,6 +240,27 @@ function removeLabels(){
 function detachCanvas(){
     //Removes everything from the content box
     contentBox.removeChild(contentBox.querySelector("#container"))
+}
+
+/**
+ * Places the labels associated to the canvas at the index provided 
+ * @param {*} index index of the canvas to get the label data from
+ */
+function putBackLabelsFrom(index){
+    //Checks if the given index is out of range
+    if(index < 0 || index >= container_divs.length){return}
+    //Removes any labels that may be visible.
+    removeLabels()
+
+    const labels = canvases[index].labels
+    for(var index = 0; index < labels.length; index++){
+        const label = labels[index]
+        createLabelElement(label)
+
+    }
+
+
+      
 }
 /**
  * Checks if there is an existing canvas at the given index. If there is, that canvas is placed back
@@ -309,7 +295,7 @@ function putBackCanvasAt(index){
 
     //updates the current canvas to the one at the given index
     currentCanvas = canvases[index]
-
+    putBackLabelsFrom(index)
     return true
 }
 /**
@@ -369,4 +355,46 @@ function handle(file) {
     }
     //Reads the data from the file (this is what will trigger the read.onload method)
     reader.readAsDataURL(file)
+}
+/**
+ * Creates a label given a label object
+ * @param {Label} label 
+ */
+function createLabelElement(label){
+    //Creates a list item 
+    const label_listItem = document.createElement("LI")
+
+    //Creates an input element (used for the list item's text)
+    const labelName_input = document.createElement("input")
+
+    const trash_button = document.createElement("input")
+    trash_button.className = "trash-button"
+    trash_button.type = "image"
+    trash_button.src = "https://findicons.com/files/icons/1580/devine_icons_part_2/128/trash_recyclebin_empty_closed.png"
+    trash_button.addEventListener("click",function(e){
+        const labelID = e.target.parentNode.querySelector(".label-input").id
+        currentCanvas.destroyRectangle(labelID)
+        e.target.parentNode.remove()
+    })
+
+    //Setting attributes of the input and combining the DOM elements
+    labelName_input.className = "label-input"
+    labelName_input.value = label.name|| "Unnamed"
+    labelName_input.id = label.id || "Unnamed"//Label's ID matches the corresponding rectangle's name
+    label_listItem.appendChild(labelName_input);
+    label_listItem.appendChild(trash_button)
+    label_listItem.className = "label"
+    label_listItem.style.backgroundColor = label.colour || "#000000"
+    labels_list.appendChild(label_listItem)
+
+    //Event listener to update the colour and name of the label when the user changes the name
+    labelName_input.addEventListener("change", function(e){
+        const label = e.target
+        const list_item = e.target.parentNode
+        currentCanvas.findLabel(label.id).config({
+            name: label.value
+        })
+        list_item.style.backgroundColor = currentCanvas.getLabelColour(label.id)
+    })
+
 }
