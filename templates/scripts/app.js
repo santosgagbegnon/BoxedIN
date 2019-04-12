@@ -51,7 +51,7 @@ next_button.addEventListener("click", function(e){
     removeLabels()
     //If the put back canvas method fails, it will create a new canvas
     if(!putBackCanvasAt(imageNumber)){
-        handle(files[imageNumber])
+        handleImage()
     }
 })
 
@@ -75,7 +75,7 @@ previous_button.addEventListener("click", function(e){
     removeLabels()
     //If the put back canvas method fails, it will create a new canvas
     if(!putBackCanvasAt(imageNumber)){
-        handle(files[imageNumber])
+        handleImage()
     }
 })
 
@@ -90,7 +90,7 @@ imagesInput.onchange = function(e) {
     });
     //Begins by handling the first image, if there are any.
     if(files.length > 0){
-        handle(files[0])
+        handleImage()
     }
     else{
         console.log("no images found :(")
@@ -296,16 +296,22 @@ function putBackCanvasAt(index){
     //adds the div to the content box to be visible to the user
     contentBox.appendChild(container_div)
 
+    const name = files[imageNumber].name
+    imageTitle_h3.innerText = name + " (" + (imageNumber+1) + "/" + files.length + ")"
+
     //updates the current canvas to the one at the given index
     currentCanvas = canvases[index]
     putBackLabelsFrom(index)
     return true
 }
 /**
- * Takes in an image file and creates and displays a canvas for it. 
- * @param {File} file 
+ * Creates a canvas for the file located at the currnet imageNumber value
  */
-function handle(file) {
+function handleImage() {
+    if(imageNumber < 0 || imageNumber >= files.length) {
+        return
+    }
+    const file = files[imageNumber]
     const reader = new FileReader()
     //method called once the data from the file is read
     reader.onload = function() {
@@ -347,6 +353,8 @@ function handle(file) {
                 console.log("click tap")
                 newCanvas.handleTransformers(e)
             })
+            const name = files[imageNumber].name
+            imageTitle_h3.innerText = name + " (" + (imageNumber+1) + "/" + files.length + ")"
             //Sets the current canvas to the newly created one
             currentCanvas = newCanvas
             //adds the newly created div to the list of divs that contain canvases
