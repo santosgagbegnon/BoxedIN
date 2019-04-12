@@ -67,7 +67,6 @@ export default class Canvas{
 
         this.image.offsetY(this.image.height()/2)
 
-
         this.labels = []
 
         //Base layer that only contains the image
@@ -97,6 +96,8 @@ export default class Canvas{
         this.stage.add(this.rectangleLayer)
 
         this.shouldResize = false
+        console.log("Image info " + this.image.width() + " height: " + this.image.height())
+        console.log("Stage info " + this.stage.width() + " height: " + this.stage.height())
     }
     /**
      * Method that should be called when the user performs a click tap event on th canvas'stage. 
@@ -379,9 +380,9 @@ export default class Canvas{
         //Scales the image to fit the canvas size
         const scale = this.scaleSize(width, height, this.image.image())
 
-        this.stage.scale({
-            width: this.stage.width()*20,
-            height: this.stage.height()*20
+        this.stage.size({
+            width: this.image.width()*scale,
+            height: this.image.height()*scale
         })
       
         this.image.scale({
@@ -390,8 +391,7 @@ export default class Canvas{
         })
 
         this.image.x(this.image.width()*scale/2)
-        this.image.y(this.image.height ()*scale/2)
-
+        this.image.y(this.image.height()*scale/2)
         this.stage.draw()
     }
 }

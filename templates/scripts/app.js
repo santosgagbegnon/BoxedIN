@@ -10,6 +10,7 @@ Variables from the DOM.
 Variables from the DOM are given the name NAME_item-type for clear distinction between variables representing items from the DOM and regular variables.
 */
 //To run locally: python3 -m http.server 8001
+const rightside = document.getElementById("rightSideWrapper")
 const contentBox = document.querySelector(".ContentBox")
 let container_div = document.getElementById("container")
 const imageTitle_h3 = document.getElementById("image-title")
@@ -102,7 +103,8 @@ imagesInput.onchange = function(e) {
  * When this occurs, the canvas stage's size is updated
  */
 window.addEventListener("resize",function(e){
-    currentCanvas.updateStage(window.innerWidth,window.innerHeight - 50)
+    currentCanvas.updateStage(rightside.offsetWidth,window.innerHeight - 50)
+    // container_div.style.width = rightside.offsetWidth
 })
 
 /**
@@ -346,7 +348,7 @@ function handleImage() {
             contentBox.appendChild(container_div)
 
             //creates a new canvas
-            const newCanvas = new Canvas(window.innerWidth,window.innerHeight - 50,image)
+            const newCanvas = new Canvas(rightside.offsetWidth,window.innerHeight - 50,image)
 
             //method called when the user taps on the canvas
             newCanvas.stage.on('click tap', function (e) {

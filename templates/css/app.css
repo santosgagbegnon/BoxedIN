@@ -98,8 +98,11 @@ html{
 
 #rightSideWrapper {
 	width:80%; 
+	height: 100%;
 	float: right;
 	background: black;	
+	background: orange;
+
 }
 
 #rightSideWrapper > header > h2 {
