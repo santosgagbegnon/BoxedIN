@@ -354,7 +354,7 @@ function handle(file) {
             //method called when the user taps on the canvas
             newCanvas.stage.on('click tap', function (e) {
                 console.log("click tap")
-                newCanvas.clickTap(e)
+                newCanvas.handleTransformers(e)
             })
             //Sets the current canvas to the newly created one
             currentCanvas = newCanvas

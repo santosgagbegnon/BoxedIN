@@ -98,8 +98,13 @@ export default class Canvas{
 
         this.shouldResize = false
     }
-    //TODO: Rename, move and comments
-    clickTap(e){
+    /**
+     * Method that should be called when the user performs a click tap event on th canvas'stage. 
+     * It will remove all transformers from the stage and if a rectangle was selected, a new transformer
+     * will be added to that rectangle.
+     * @param {*} e Click tap event
+     */
+    handleTransformers(e){
         if(!this.shouldResize){return}
 
         // if click on empty area - remove all transformers
