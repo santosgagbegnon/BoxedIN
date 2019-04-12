@@ -7,6 +7,35 @@ const defaultColour = "#8de874"
  */
 export default class Canvas{
 
+
+    putBack(container){
+
+       
+
+        this.stage.container(container)
+        this.stage.add(this.imageLayer)
+        this.stage.add(this.rectangleLayer)
+        this.stage.draw()
+    }
+
+    // constructor(canvas){
+    //     this.stage = canvas.stage
+    //     this.image = canvas.image
+    //     this.imageLayer = canvas.imageLayer
+    //     this.currentRectangle = canvas.currentRectangle
+    //     this.numberOfRectangles = canvas.numberOfRectangles
+    //     this.rectangleLayer = canvas.rectangleLayer
+    //     this.shouldResize = canvas.shouldResize
+    //     //adds image to imageLayer
+    //     this.imageLayer.add(this.image)
+
+    //     //adds imageLayer to stage
+    //     this.stage.add(this.imageLayer)
+
+    //     //adds the rectangle layer to the stage
+    //     this.stage.add(this.rectangleLayer)
+    //     this.stage.draw()
+    // }
     /**
      * Constructor for canvas 
      * @param {number} width width of the canvas.

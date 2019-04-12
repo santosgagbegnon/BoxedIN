@@ -10,8 +10,8 @@ Variables from the DOM.
 Variables from the DOM are given the name NAME_item-type for clear distinction between variables representing items from the DOM and regular variables.
 */
 //To run locally: python3 -m http.server 8001
-
-const container_div = document.getElementById("container")
+const contentBox = document.querySelector(".ContentBox")
+let container_div = document.getElementById("container")
 const imageTitle_h3 = document.getElementById("image-title")
 const undo_button = document.getElementById("undo-button")
 const redo_button = document.getElementById("redo-button")
@@ -27,7 +27,8 @@ let currentCanvas = null
 let tool = 0 //Represents which tool is active, 0: Draw, 1: Move/Resizing
 let imageNumber = 0
 let canvases = []
-next_button.addEventListener("mousedown", function(e){
+let divs = []
+next_button.addEventListener("click", function(e){
     console.log("Move to next image")
     imageNumber ++
     console.log(files.length)
@@ -37,7 +38,34 @@ next_button.addEventListener("mousedown", function(e){
         return
     }
     detachCanvas()
-    handle(files[imageNumber])
+    removeLabels()
+    if(!putBackCanvasAt(imageNumber)){
+        console.log("making new canvas")
+        handle(files[imageNumber])
+    }
+    else{
+        console.log("found old canvas")
+        // handle(files[imageNumber])
+    }
+})
+
+previous_button.addEventListener("click", function(e){
+    imageNumber --
+    if(imageNumber < 0){
+        console.log("Start of images, please go to the next.")
+        imageNumber = 0
+        return
+    }
+    detachCanvas()
+    removeLabels()
+    if(!putBackCanvasAt(imageNumber)){
+        console.log("making new canvas")
+        handle(files[imageNumber])
+    }
+    else{
+        console.log("found old canvas")
+      //  handle(files[imageNumber])
+    }
 })
 
 imagesInput.onchange = function(e) {
@@ -48,9 +76,25 @@ imagesInput.onchange = function(e) {
     handle(files[0])
 }
 
-
+function removeLabels(){
+    while (labels_list.firstChild) {
+        labels_list.removeChild(labels_list.firstChild);
+    }
+}
 function detachCanvas(){
-    currentCanvas.stage.removeChildren()
+    console.log("detach canvas")
+    while (contentBox.firstChild) {
+         contentBox.removeChild(contentBox.firstChild);
+    }
+    // while(contentBox.querySelectorAll("#container").length > 0){
+    //     console.log("Deleting a container")
+    //     contentBox.querySelectorAll("#container")[0].remove()
+    // }
+
+    // container_div.remove()
+    // console.log("getting content")
+    // console.log(currentCanvas.stage.getParent())
+    // currentCanvas.stage.removeChildren()
 }
 
 window.addEventListener("resize",function(e){
@@ -96,7 +140,7 @@ toolToggle_checkbox.addEventListener("change", function(e){
 
 
 //Adding event listeners
-container_div.addEventListener("mousedown", function(e){
+function divMouseDown(e){
     e.preventDefault()
     if(currentCanvas == null){return}
     switch(tool){
@@ -112,9 +156,26 @@ container_div.addEventListener("mousedown", function(e){
         default:
             break
     }
-})
+}
+// container_div.addEventListener("mousedown", function(e){
+//     e.preventDefault()
+//     if(currentCanvas == null){return}
+//     switch(tool){
+//         case 0:
+//             currentCanvas.editable(false)
+//             currentCanvas.createRectangle()
+//             break
 
-container_div.addEventListener("mousemove", function(e){
+//         case 1:
+//             currentCanvas.editable(true)
+//             break
+
+//         default:
+//             break
+//     }
+// })
+
+function divMouseMove(e){
     if(currentCanvas == null){return}
     switch(tool){
         case 0:
@@ -126,10 +187,25 @@ container_div.addEventListener("mousemove", function(e){
         
         default:
             break
-    }
-})
+    } 
+}
 
-$("#container").on('mouseup mouseleave', function(e){
+// container_div.addEventListener("mousemove", function(e){
+//     if(currentCanvas == null){return}
+//     switch(tool){
+//         case 0:
+//             currentCanvas.updateRectangle(e)
+//             break;
+
+//         case 1:
+//             break
+        
+//         default:
+//             break
+//     }
+// })
+
+function divMouseUp(e){
     switch(tool){
         case 0:
             const label = currentCanvas.finishCurrentRectangle()
@@ -180,12 +256,105 @@ $("#container").on('mouseup mouseleave', function(e){
         default:
             break
     }
-})
+
+}
+
+// $("#container").on('mouseup mouseleave', function(e){
+//     switch(tool){
+//         case 0:
+//             const label = currentCanvas.finishCurrentRectangle()
+//             //Creates a new UI label if a rectangle was added to the canvas
+//             if(label != null){
+//                 //Creates a list item 
+//                 const label_listItem = document.createElement("LI")
+
+//                 //Creates an input element (used for the list item's text)
+//                 const labelName_input = document.createElement("input")
+
+//                 const trash_button = document.createElement("input")
+//                 trash_button.className = "trash-button"
+//                 trash_button.type = "image"
+//                 trash_button.src = "https://findicons.com/files/icons/1580/devine_icons_part_2/128/trash_recyclebin_empty_closed.png"
+//                 trash_button.addEventListener("click",function(e){
+//                     const labelID = e.target.parentNode.querySelector(".label-input").id
+//                     currentCanvas.destroyRectangle(labelID)
+//                     e.target.parentNode.remove()
+//                 })
+
+//                 //Setting attributes of the input and combining the DOM elements
+//                 labelName_input.className = "label-input"
+//                 labelName_input.value = "Unnamed"
+//                 labelName_input.id = label.id //Label's ID matches the corresponding rectangle's name
+//                 label_listItem.appendChild(labelName_input);
+//                 label_listItem.appendChild(trash_button)
+//                 label_listItem.className = "label"
+//                 label_listItem.style.backgroundColor = label.colour
+//                 labels_list.appendChild(label_listItem)
+
+//                 //Event listener to update the colour and name of the label when the user changes the name
+//                 labelName_input.addEventListener("change", function(e){
+//                     const label = e.target
+//                     const list_item = e.target.parentNode
+//                     currentCanvas.findLabel(label.id).config({
+//                         name: label.value
+//                     })
+//                     list_item.style.backgroundColor = currentCanvas.getLabelColour(label.id)
+//                 })
+               
+//             }
+//             break;
+
+//         case 1:
+//             break
+    
+//         default:
+//             break
+//     }
+// })
 
 /**
  * 
  */
 
+function putBackCanvasAt(index){
+    // if(index < 0 || index >= canvases.length){
+    //     return false
+    // }
+
+    if(index < 0 || index >= divs.length){
+        return false
+    }
+
+    const container_div = divs[index]
+    console.log("adding old one")
+    container_div.addEventListener("mousedown", function(e){
+        divMouseDown(e)
+    })
+    container_div.addEventListener("mousemove", function(e){
+        divMouseMove(e)
+    })
+    container_div.addEventListener("mouseup", function(e){
+        divMouseUp(e)
+    })
+    container_div.addEventListener("mouseleave", function(e){
+        divMouseUp(e)
+    })
+    contentBox.appendChild(container_div)
+    currentCanvas = canvases[index]
+
+    // const newCanvas = new Canvas(canvas)
+    // newCanvas.stage.on('click tap', function (e) {
+    //     newCanvas.clickTap(e)
+    // })
+    // currentCanvas = newCanvas
+    // canvases[index] = newCanvas
+    // canvases.push(newCanvas)
+    // canvas.stage.remove()
+    // canvas.putBack(container_div)
+
+    return true
+}
+var firstTime = true
 function handle(file) {
     console.log(file)
     const reader = new FileReader()
@@ -194,13 +363,37 @@ function handle(file) {
         const image = new Image()
         image.src = reader.result
         image.onload = function(){
+            if(firstTime){
+                container_div.parentNode.removeChild(container_div)
+                firstTime = false
+            }
+            container_div = document.createElement("div")
+            container_div.id = "container"
+            container_div.addEventListener("mousedown", function(e){
+                divMouseDown(e)
+            })
+            container_div.addEventListener("mousemove", function(e){
+                divMouseMove(e)
+            })
+            container_div.addEventListener("mouseup", function(e){
+                divMouseUp(e)
+            })
+            container_div.addEventListener("mouseleave", function(e){
+                divMouseUp(e)
+            })
+            
+            contentBox.appendChild(container_div)
+
             const newCanvas = new Canvas(window.innerWidth,window.innerHeight - 50,image)
             newCanvas.stage.on('click tap', function (e) {
                 newCanvas.clickTap(e)
             })
-            currentCanvas = newCanvas
-            canvases.push(newCanvas)
 
+            currentCanvas = newCanvas
+            console.log("Div being added")
+            console.log(container_div)
+            divs.push(container_div)
+            canvases.push(newCanvas)
         }
         
     }
