@@ -110,7 +110,10 @@ window.addEventListener("resize",function(e){
  * Handles keyboard shortcuts 
  */
 
+ 
 document.addEventListener("keypress", function(e){
+    //Checks if the keypress occured on an input. If it was, the keypress is ignored.
+    if(e.target.nodeName == "INPUT"){return}
     const unicode = e.which //gets the unicode of the button pressed
     switch (unicode) {
         //Pressed D/d
@@ -386,7 +389,6 @@ function createLabelElement(label){
     label_listItem.className = "label"
     label_listItem.style.backgroundColor = label.colour || "#000000"
     labels_list.appendChild(label_listItem)
-
     //Event listener to update the colour and name of the label when the user changes the name
     labelName_input.addEventListener("change", function(e){
         const label = e.target
