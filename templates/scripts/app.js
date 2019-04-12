@@ -28,6 +28,8 @@ let tool = 0 //Represents which tool is active, 0: Draw, 1: Move/Resizing
 let imageNumber = 0 //Represents which image out of the images uploaded is currently being displayed
 let canvases = [] //Contains all of the canvases created (one for each image)
 let container_divs = [] //Contains all of the container divs that contain the canvases
+var isFirstCanvas = true //true only while there has been no canvas added to the app yet.
+
 
 
 /**
@@ -294,13 +296,13 @@ function putBackCanvasAt(index){
         canvasDivMouseDown(e)
     })
     container_div.addEventListener("mousemove", function(e){
-        divMouseMove(e)
+        canvasDivMouseMove(e)
     })
     container_div.addEventListener("mouseup", function(e){
-        divMouseUp(e)
+        canvasDivMouseUp(e)
     })
     container_div.addEventListener("mouseleave", function(e){
-        divMouseUp(e)
+        canvasDivMouseUp(e)
     })
     //adds the div to the content box to be visible to the user
     contentBox.appendChild(container_div)
@@ -310,8 +312,6 @@ function putBackCanvasAt(index){
 
     return true
 }
-var firstTime = true
-
 /**
  * Takes in an image file and creates and displays a canvas for it. 
  * @param {File} file 
@@ -324,9 +324,11 @@ function handle(file) {
         image.src = reader.result
         //Called once the image is loaded from the file data
         image.onload = function(){
-            if(firstTime){
-                container_div.parentNode.removeChild(container_div)
-                firstTime = false
+            //if this is the first canvas ever to be created, this means the container div contains the upload button.
+            //Because of this, that container div must be removed before continuing on with the handling of the file.
+            if(isFirstCanvas){
+               container_div.parentNode.removeChild(container_div)
+               isFirstCanvas = false
             }
             //Creates the div that will contain the new canvas
             container_div = document.createElement("div")
