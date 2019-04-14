@@ -49,6 +49,7 @@ html{
 	margin: 60px;
 }
 #labels-list{
+	position: relative;
 	margin-top: 20px;
     height: 550px;
     overflow: hidden;

@@ -6,3 +6,9 @@ templates/assets/test_images
 
 #Ignore testing HTML
 test.html
+
+#Ignore virtual environment
+boxedin-env
+
+#Ignore VS code settings
+.vscode
