@@ -379,6 +379,12 @@ export default class Canvas{
     updateStage(width,height){
         //Scales the image to fit the canvas size
         const scale = this.scaleSize(width, height, this.image.image())
+        const rectangles = this.rectangleLayer.getChildren(function(node){
+            return node.getClassName() === 'Rect'
+        })
+
+        const oldStageWidth = this.stage.width()
+        const oldStageHeight = this.stage.height()
 
         this.stage.size({
             width: this.image.width()*scale,
@@ -389,6 +395,37 @@ export default class Canvas{
             x: scale,
             y: scale,
         })
+
+        const stageScaleX = this.stage.width() / oldStageWidth 
+        const stageScaleY = this.stage.height() / oldStageHeight
+
+        // console.log(" x: " + newX + " y: " + newY)
+        // console.log("EW x: " + rectangles[0].x() + " y: " + rectangles[0].y())
+
+        for(var index = 0; index < rectangles.length; index++){
+            const rectangle = rectangles[index]
+            rectangle.x(rectangle.x() * stageScaleX)
+            rectangle.y(rectangle.y() * stageScaleY)
+            rectangle.size({
+                width: rectangle.width()*stageScaleX,
+                height: rectangle.height()*stageScaleY
+            })
+        }
+
+
+        // rectangles[0].x(rectangles[0].x() *newX)
+        // rectangles[0].y(rectangles[0].y() *newY)
+
+
+        // rectangles[0].y({
+        //     width: rectangles[0].width()*newX,
+        //     height: rectangles[0].height()*newY
+        // })
+
+        // rectangles[0].size({
+        //     width: rectangles[0].width()*newX,
+        //     height: rectangles[0].height()*newY
+        // })
 
         this.image.x(this.image.width()*scale/2)
         this.image.y(this.image.height()*scale/2)
