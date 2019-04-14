@@ -379,29 +379,32 @@ export default class Canvas{
     updateStage(width,height){
         //Scales the image to fit the canvas size
         const scale = this.scaleSize(width, height, this.image.image())
+        //Gets the list of rectangles drawn by the user
         const rectangles = this.rectangleLayer.getChildren(function(node){
             return node.getClassName() === 'Rect'
         })
 
+        //Saves the stage's width and height before the new scale is applied
         const oldStageWidth = this.stage.width()
         const oldStageHeight = this.stage.height()
 
+        //Resizes the stage according to the calculated scale
         this.stage.size({
             width: this.image.width()*scale,
             height: this.image.height()*scale
         })
       
+        //Scales image to the new scale
         this.image.scale({
             x: scale,
             y: scale,
         })
 
+        //Calculates the stage scale to be used by the rectangles by dividing the stage's new size by the old size
         const stageScaleX = this.stage.width() / oldStageWidth 
         const stageScaleY = this.stage.height() / oldStageHeight
 
-        // console.log(" x: " + newX + " y: " + newY)
-        // console.log("EW x: " + rectangles[0].x() + " y: " + rectangles[0].y())
-
+        //Loops through each rectangle and resizes and respositions them
         for(var index = 0; index < rectangles.length; index++){
             const rectangle = rectangles[index]
             rectangle.x(rectangle.x() * stageScaleX)
@@ -411,24 +414,11 @@ export default class Canvas{
                 height: rectangle.height()*stageScaleY
             })
         }
-
-
-        // rectangles[0].x(rectangles[0].x() *newX)
-        // rectangles[0].y(rectangles[0].y() *newY)
-
-
-        // rectangles[0].y({
-        //     width: rectangles[0].width()*newX,
-        //     height: rectangles[0].height()*newY
-        // })
-
-        // rectangles[0].size({
-        //     width: rectangles[0].width()*newX,
-        //     height: rectangles[0].height()*newY
-        // })
-
+        //Respoitions the image to be in the middle
         this.image.x(this.image.width()*scale/2)
         this.image.y(this.image.height()*scale/2)
+        
+        //Makes sure the new changes are visible by redrawing the stage
         this.stage.draw()
     }
 }
