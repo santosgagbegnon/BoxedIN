@@ -12,3 +12,6 @@ boxedin-env
 
 #Ignore VS code settings
 .vscode
+
+#Ignore test sframe creator
+sframe.py
