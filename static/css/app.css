@@ -14,7 +14,7 @@ html{
 	height: 100%;
 	width:20%;
 	margin: 0px;  
-	background: #363535; 
+	background: #2b2a2a; 
 	text-align: center;
 	overflow: hidden;
 }
@@ -101,8 +101,6 @@ html{
 	width:80%; 
 	height: 100%;
 	float: right;
-	background: black;	
-	background: orange;
 
 }
 
@@ -155,7 +153,6 @@ canvas {
 }
 
 #container{
-	background-color: yellow;
 	left: 20%;
 	right: 0;
 	top: 50px;
