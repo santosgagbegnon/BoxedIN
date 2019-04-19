@@ -157,7 +157,11 @@ toolToggle_checkbox.addEventListener("change", function(e){
 
 export_button.addEventListener("click", function(){
     console.log("Export")
-    currentCanvas.exportData()
+    const data = currentCanvas.exportData()
+    const request = new XMLHttpRequest()
+    request.open("POST","/export")
+    request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+    request.send(JSON.stringify(data))
 })
 
 

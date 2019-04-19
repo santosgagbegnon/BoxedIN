@@ -96,8 +96,8 @@ export default class Canvas{
         this.stage.add(this.rectangleLayer)
 
         this.shouldResize = false
-        console.log("Image info " + this.image.width() + " height: " + this.image.height())
-        console.log("Stage info " + this.stage.width() + " height: " + this.stage.height())
+        // console.log("Image info " + this.image.width() + " height: " + this.image.height())
+        // console.log("Stage info " + this.stage.width() + " height: " + this.stage.height())
     }
     /**
      * Method that should be called when the user performs a click tap event on th canvas'stage. 
@@ -128,7 +128,7 @@ export default class Canvas{
 
         this.rectangleLayer.add(transformer);
         transformer.attachTo(e.target);
-        console.log(e.target)
+        // console.log(e.target)
         this.rectangleLayer.draw();
     }
     /**
@@ -413,7 +413,7 @@ export default class Canvas{
                 width: rectangle.width()*stageScaleX,
                 height: rectangle.height()*stageScaleY
             })
-            console.log("RECTANGLE" + rectangle.width() + " " + rectangle.height())
+          //  console.log("RECTANGLE" + rectangle.width() + " " + rectangle.height())
         }
         //Respoitions the image to be in the middle
         this.image.x(this.image.width()*scale/2)
@@ -447,7 +447,7 @@ export default class Canvas{
         //CSV stuff
         // let titles = ["image", "name","annotations"]
         let data = "Height: {height} Width: {width}".replace("{height}", stageSize.height).replace("{width}", stageSize.width) + ";["
-        //Loops through each rectangle and resizes and respositions them
+        let annotations = []
         for(var index = 0; index < rectangles.length; index++){
             const rectangle = rectangles[index]
 
@@ -473,12 +473,19 @@ export default class Canvas{
                     y: midY
                 }
             }
+            annotations.push(annotation)
+ 
             data += "," + JSON.stringify(annotation)
             // console.log("minX: " + minX + "maxX: " + maxX + "minY: " + minY + "maxY: "+ maxY)
         }
-        console.log(data)
-
-        
+        const row = {
+            image : "Height: " + stageSize.height + " Width: " +stageSize.width,
+            name: "image00"+count,
+            annotation: annotations
+        }
+        console.log(JSON.stringify(row))
+        count = count +1
+        return row 
     }
 }
 
@@ -510,3 +517,6 @@ export class Label {
         this.name = config.name || this.name
     }
 }
+
+ //temporary
+ let count = 0 
