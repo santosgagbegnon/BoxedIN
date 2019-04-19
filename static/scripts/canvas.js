@@ -413,6 +413,7 @@ export default class Canvas{
                 width: rectangle.width()*stageScaleX,
                 height: rectangle.height()*stageScaleY
             })
+            console.log("RECTANGLE" + rectangle.width() + " " + rectangle.height())
         }
         //Respoitions the image to be in the middle
         this.image.x(this.image.width()*scale/2)
@@ -420,6 +421,64 @@ export default class Canvas{
         
         //Makes sure the new changes are visible by redrawing the stage
         this.stage.draw()
+    }
+
+    exportData(){
+        //Scales the image to fit the canvas size
+        const scale = this.scaleSize(this.image.image().width, this.image.image().height, this.image.image())
+        //Gets the list of rectangles drawn by the user
+        const rectangles = this.rectangleLayer.getChildren(function(node){
+            return node.getClassName() === 'Rect'
+        })
+
+        //Saves the stage's width and height before the new scale is applied
+        const oldStageWidth = this.stage.width()
+        const oldStageHeight = this.stage.height()
+        //needed
+        const stageSize = {
+            width: this.image.width()*scale,
+            height: this.image.height()*scale
+        }
+
+        //Calculates the stage scale to be used by the rectangles by dividing the stage's new size by the old size
+        const stageScaleX = stageSize.width / oldStageWidth 
+        const stageScaleY = stageSize.height / oldStageHeight
+
+        //CSV stuff
+        // let titles = ["image", "name","annotations"]
+        let data = "Height: {height} Width: {width}".replace("{height}", stageSize.height).replace("{width}", stageSize.width) + ";["
+        //Loops through each rectangle and resizes and respositions them
+        for(var index = 0; index < rectangles.length; index++){
+            const rectangle = rectangles[index]
+
+            const width = rectangle.width()*stageScaleX
+            const height = rectangle.height()*stageScaleY
+
+            const minX = rectangle.x() * stageScaleX
+            const minY = rectangle.y() * stageScaleY
+
+            const maxX = minX + width 
+            const maxY = minY + height
+
+            const midX = (minX + maxX)/2
+            const midY = (minY + maxY)/2
+
+            const annotation = {
+                label: "{label}",
+                type: "rectangle",
+                coordinates: {
+                    height: height,
+                    width: width,
+                    x: midX,
+                    y: midY
+                }
+            }
+            data += "," + JSON.stringify(annotation)
+            // console.log("minX: " + minX + "maxX: " + maxX + "minY: " + minY + "maxY: "+ maxY)
+        }
+        console.log(data)
+
+        
     }
 }
 

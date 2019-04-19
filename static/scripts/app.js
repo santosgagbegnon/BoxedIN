@@ -31,8 +31,6 @@ let canvases = [] //Contains all of the canvases created (one for each image)
 let container_divs = [] //Contains all of the container divs that contain the canvases
 var isFirstCanvas = true //true only while there has been no canvas added to the app yet.
 
-
-
 /**
  * Event listener for the next button. 
  * Removes the current canvas being displayed (if any), removes labels (if any) and uses the already created
@@ -156,6 +154,12 @@ toolToggle_checkbox.addEventListener("change", function(e){
         currentCanvas.editable(false)
     }
 })
+
+export_button.addEventListener("click", function(){
+    console.log("Export")
+    currentCanvas.exportData()
+})
+
 
 //EVENT LISTENERS FOR CANVAS DIV
 
@@ -306,6 +310,9 @@ function putBackCanvasAt(index){
     putBackLabelsFrom(index)
     return true
 }
+//temp
+var width = 0
+var height = 0
 /**
  * Creates a canvas for the file located at the currnet imageNumber value
  */
@@ -321,6 +328,8 @@ function handleImage() {
         image.src = reader.result
         //Called once the image is loaded from the file data
         image.onload = function(){
+            width = image.width
+            height = image.height
             //if this is the first canvas ever to be created, this means the container div contains the upload button.
             //Because of this, that container div must be removed before continuing on with the handling of the file.
             if(isFirstCanvas){
@@ -409,4 +418,19 @@ function createLabelElement(label){
         list_item.style.backgroundColor = currentCanvas.getLabelColour(label.id)
     })
 
+}
+
+function sendData(){
+    currentCanvas.updateStage(width,height)
+    const data = "Image, First Name, Last Name"
+    const formData = new FormData()
+    const blob = new Blob([data], {type: "text/csv"})
+    const request = new XMLHttpRequest()
+    request.open("POST", "/export", true)
+    request.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
+
+    request.onload = function(){ 
+        console.log("done")
+    }
+    request.send("csv-data="+"csvdata")
 }
