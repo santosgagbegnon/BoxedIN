@@ -1,4 +1,6 @@
 import csv
+import zipfile
+import os
 import tempfile
 import turicreate as tc
 from PIL import Image
@@ -30,8 +32,9 @@ def createSFrame(imagesData):
         sFrame["label"] = labelCol
         sFrame["annotations"] = annotationCol
         print(sFrame)
-        sFrame['image_with_ground_truth'] = tc.object_detector.util.draw_bounding_boxes(sFrame["image"], sFrame["annotations"])
-        sFrame.explore()
+        return sFrame
+        # sFrame['image_with_ground_truth'] = tc.object_detector.util.draw_bounding_boxes(sFrame["image"], sFrame["annotations"])
+        # sFrame.explore()
 
 #create images
 def createImage(data):
@@ -65,8 +68,21 @@ def export():
     print("Got Data")
     results = request.get_json()["results"]
     print("Number of images: " + str(len(results)))
-    createSFrame(results)
-    return "ok"
+    sFrame = createSFrame(results)
+    memory_file = BytesIO()
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        path = tmpdirname + "/santos.sframe"
+        sFrame.save(path)
+        with zipfile.ZipFile(memory_file, 'w') as zf:
+            # zf.write(path)
+            for dirname, subdirs, files in os.walk(path):
+                zf.write(dirname)
+                for filename in files:
+                    zf.write(os.path.join(dirname, filename))
+                    
+        memory_file.seek(0)
+        return send_file(memory_file, attachment_filename='capsule.zip', as_attachment=True)
+    #return send_file(sFrame, as_attachment=True, attachment_filename="boxedin.sframe")
 
 if __name__ == '__main__':
      app.run(host ='127.0.0.1', port = 8001, debug = True)
