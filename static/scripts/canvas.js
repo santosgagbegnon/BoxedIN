@@ -42,7 +42,7 @@ export default class Canvas{
      * @param {number} height height of the canvas.
      * @param {Image} image the base image that will be drawn on.
      */
-    constructor(file,width,height,image){
+    constructor(width,height,image){
         self = this
         //Scales the image to fit the canvas size
         const scale = this.scaleSize(width,height,image)
@@ -67,22 +67,6 @@ export default class Canvas{
         this.image.offsetX(this.image.width()/2)
 
         this.image.offsetY(this.image.height()/2)        
-
-        // const result = EXIF.getData(image, function(){
-        //     console.log("called")
-        //     var orientation = EXIF.getTag(this,"Orientation")
-        //     switch (orientation) {
-        //         case 6:
-        //         console.log(self)
-        //             self.image.rotate(90)
-        //             break
-        //         default:
-        //             break
-        //     }
-        //     console.log("Orientation: " + orientation)
-        // })
-
-        // this.image.rotate(90)
 
         this.labels = []
 
@@ -117,9 +101,6 @@ export default class Canvas{
         // console.log("Stage info " + this.stage.width() + " height: " + this.stage.height())
     }
 
-    method(){
-        console.log("method")
-    }
     /**
      * Method that should be called when the user performs a click tap event on th canvas'stage. 
      * It will remove all transformers from the stage and if a rectangle was selected, a new transformer
