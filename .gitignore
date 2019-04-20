@@ -14,4 +14,4 @@ boxedin-env
 .vscode
 
 #Ignore test sframe creator
-sframe.py
+misc
