@@ -395,11 +395,6 @@ export default class Canvas{
         this.stage.draw()
     }
 
-    rotate(){
-        // this.stage.rotation(10);
-        // this.stage.draw()
-    }
-
     exportData(){
         //Scales the image to fit the canvas size
         const scale = this.scaleSize(this.image.image().width, this.image.image().height, this.image.image())
@@ -423,10 +418,16 @@ export default class Canvas{
 
         //CSV stuff
         // let titles = ["image", "name","annotations"]
-        let data = "Height: {height} Width: {width}".replace("{height}", stageSize.height).replace("{width}", stageSize.width) + ";["
+        // let data = "Height: {height} Width: {width}".replace("{height}", stageSize.height).replace("{width}", stageSize.width) + ";["
         let annotations = []
         for(var index = 0; index < rectangles.length; index++){
             const rectangle = rectangles[index]
+            const label = this.findLabel(rectangle.name()).name
+            if(label == null || label == ""){
+                continue
+            }
+
+            console.log(label)
 
             const width = rectangle.width()*stageScaleX
             const height = rectangle.height()*stageScaleY
@@ -441,7 +442,7 @@ export default class Canvas{
             const midY = (minY + maxY)/2
 
             const annotation = {
-                label: "{label}",
+                label: label,
                 type: "rectangle",
                 coordinates: {
                     height: height,
@@ -460,7 +461,7 @@ export default class Canvas{
             base64: this.image.image().toDataURL().split(",")[1],
             image : "Height: " + stageSize.height + " Width: " +stageSize.width,
             name: "image00"+count,
-            label: "cheese",
+            label: "boxedIN",
             annotation: annotations
         }
         console.log(row)
