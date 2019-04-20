@@ -283,9 +283,6 @@ function putBackLabelsFrom(index){
         createLabelElement(label)
 
     }
-
-
-      
 }
 /**
  * Checks if there is an existing canvas at the given index. If there is, that canvas is placed back
@@ -427,19 +424,4 @@ function createLabelElement(label){
         list_item.style.backgroundColor = currentCanvas.getLabelColour(label.id)
     })
 
-}
-
-function sendData(){
-    currentCanvas.updateStage(width,height)
-    const data = "Image, First Name, Last Name"
-    const formData = new FormData()
-    const blob = new Blob([data], {type: "text/csv"})
-    const request = new XMLHttpRequest()
-    request.open("POST", "/export", true)
-    request.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
-
-    request.onload = function(){ 
-        console.log("done")
-    }
-    request.send("csv-data="+"csvdata")
 }
