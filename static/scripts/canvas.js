@@ -42,7 +42,8 @@ export default class Canvas{
      * @param {number} height height of the canvas.
      * @param {Image} image the base image that will be drawn on.
      */
-    constructor(width,height,image){
+    constructor(file,width,height,image){
+        self = this
         //Scales the image to fit the canvas size
         const scale = this.scaleSize(width,height,image)
 
@@ -65,7 +66,23 @@ export default class Canvas{
         //Sets the offset of the image to be the center.
         this.image.offsetX(this.image.width()/2)
 
-        this.image.offsetY(this.image.height()/2)
+        this.image.offsetY(this.image.height()/2)        
+
+        // const result = EXIF.getData(image, function(){
+        //     console.log("called")
+        //     var orientation = EXIF.getTag(this,"Orientation")
+        //     switch (orientation) {
+        //         case 6:
+        //         console.log(self)
+        //             self.image.rotate(90)
+        //             break
+        //         default:
+        //             break
+        //     }
+        //     console.log("Orientation: " + orientation)
+        // })
+
+        // this.image.rotate(90)
 
         this.labels = []
 
@@ -98,6 +115,10 @@ export default class Canvas{
         this.shouldResize = false
         // console.log("Image info " + this.image.width() + " height: " + this.image.height())
         // console.log("Stage info " + this.stage.width() + " height: " + this.stage.height())
+    }
+
+    method(){
+        console.log("method")
     }
     /**
      * Method that should be called when the user performs a click tap event on th canvas'stage. 
@@ -423,6 +444,11 @@ export default class Canvas{
         this.stage.draw()
     }
 
+    rotate(){
+        // this.stage.rotation(10);
+        // this.stage.draw()
+    }
+
     exportData(){
         //Scales the image to fit the canvas size
         const scale = this.scaleSize(this.image.image().width, this.image.image().height, this.image.image())
@@ -478,12 +504,17 @@ export default class Canvas{
             data += "," + JSON.stringify(annotation)
             // console.log("minX: " + minX + "maxX: " + maxX + "minY: " + minY + "maxY: "+ maxY)
         }
+        //console.log(this.image.image().toDataURL())
         const row = {
+            base64: this.image.image().toDataURL().split(",")[1],
             image : "Height: " + stageSize.height + " Width: " +stageSize.width,
             name: "image00"+count,
+            label: "cheese",
             annotation: annotations
         }
-        console.log(JSON.stringify(row))
+        console.log(row)
+        // console.log(this.image.image().src.split(",")[1])
+        // console.log(JSON.stringify(row))
         count = count +1
         return row 
     }
@@ -520,3 +551,4 @@ export class Label {
 
  //temporary
  let count = 0 
+

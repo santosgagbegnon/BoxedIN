@@ -31,6 +31,10 @@ let canvases = [] //Contains all of the canvases created (one for each image)
 let container_divs = [] //Contains all of the container divs that contain the canvases
 var isFirstCanvas = true //true only while there has been no canvas added to the app yet.
 
+
+undo_button.addEventListener("click", function(e){
+    currentCanvas.rotate()
+})
 /**
  * Event listener for the next button. 
  * Removes the current canvas being displayed (if any), removes labels (if any) and uses the already created
@@ -157,11 +161,19 @@ toolToggle_checkbox.addEventListener("change", function(e){
 
 export_button.addEventListener("click", function(){
     console.log("Export")
-    const data = currentCanvas.exportData()
+    let results = []
+    for(var index = 0; index < canvases.length; index++){
+        const data = canvases[index].exportData()
+        results.push(data)
+
+    }
+    const data = {
+        results :results
+    }
     const request = new XMLHttpRequest()
     request.open("POST","/export")
     request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
-    request.send(JSON.stringify(data))
+   request.send(JSON.stringify(data))
 })
 
 
@@ -326,61 +338,119 @@ function handleImage() {
     }
     const file = files[imageNumber]
     const reader = new FileReader()
+    loadImage(file,function(image){
+        console.log("new style loaded " + image.width + "; " + image.height)
+        width = image.width
+        height = image.height
+        //if this is the first canvas ever to be created, this means the container div contains the upload button.
+        //Because of this, that container div must be removed before continuing on with the handling of the file.
+        if(isFirstCanvas){
+           container_div.parentNode.removeChild(container_div)
+           isFirstCanvas = false
+        }
+        //Creates the div that will contain the new canvas
+        container_div = document.createElement("div")
+        container_div.id = "container"
+        //Sets up the event listeners for the div
+        container_div.addEventListener("mousedown", function(e){
+            canvasDivMouseDown(e)
+        })
+        container_div.addEventListener("mousemove", function(e){
+            canvasDivMouseMove(e)
+        })
+        container_div.addEventListener("mouseup", function(e){
+            canvasDivMouseUp(e)
+        })
+        container_div.addEventListener("mouseleave", function(e){
+            //mouseup and mouseleave provoke the same action.
+            canvasDivMouseUp(e)
+        })
+        //adds the div to the content box inorder to make it visible to the user
+        contentBox.appendChild(container_div)
+
+        //creates a new canvas
+        const newCanvas = new Canvas(file,rightside.offsetWidth,window.innerHeight - 50,image)
+
+        //method called when the user taps on the canvas
+        newCanvas.stage.on('click tap', function (e) {
+            console.log("click tap")
+            newCanvas.handleTransformers(e)
+        })
+        const name = files[imageNumber].name
+        imageTitle_h3.innerText = name + " (" + (imageNumber+1) + "/" + files.length + ")"
+        //Sets the current canvas to the newly created one
+        currentCanvas = newCanvas
+        //adds the newly created div to the list of divs that contain canvases
+        container_divs.push(container_div)
+        //adds the newly created div to the list of canvases
+        canvases.push(newCanvas)
+    }, {orientation:true})
     //method called once the data from the file is read
     reader.onload = function() {
         const image = new Image()
         image.src = reader.result
+
         //Called once the image is loaded from the file data
         image.onload = function(){
-            width = image.width
-            height = image.height
-            //if this is the first canvas ever to be created, this means the container div contains the upload button.
-            //Because of this, that container div must be removed before continuing on with the handling of the file.
-            if(isFirstCanvas){
-               container_div.parentNode.removeChild(container_div)
-               isFirstCanvas = false
-            }
-            //Creates the div that will contain the new canvas
-            container_div = document.createElement("div")
-            container_div.id = "container"
-            //Sets up the event listeners for the div
-            container_div.addEventListener("mousedown", function(e){
-                canvasDivMouseDown(e)
-            })
-            container_div.addEventListener("mousemove", function(e){
-                canvasDivMouseMove(e)
-            })
-            container_div.addEventListener("mouseup", function(e){
-                canvasDivMouseUp(e)
-            })
-            container_div.addEventListener("mouseleave", function(e){
-                //mouseup and mouseleave provoke the same action.
-                canvasDivMouseUp(e)
-            })
-            //adds the div to the content box inorder to make it visible to the user
-            contentBox.appendChild(container_div)
+            console.log("RESULTS: " + image.width + ": " + image.height)
+            console.log("NATURAL: " + image.naturalWidth + ": " + image.naturalHeight)
+            // console.log(image.width + " : " + image.height)
+            imageToCanvasToImage(image, function(image){
+                // console.log("Callback called")
+                // console.log(image.width, " : " + image.height)
 
-            //creates a new canvas
-            const newCanvas = new Canvas(rightside.offsetWidth,window.innerHeight - 50,image)
+            
+            // width = image.width
+            // height = image.height
+            // //if this is the first canvas ever to be created, this means the container div contains the upload button.
+            // //Because of this, that container div must be removed before continuing on with the handling of the file.
+            // if(isFirstCanvas){
+            //    container_div.parentNode.removeChild(container_div)
+            //    isFirstCanvas = false
+            // }
+            // //Creates the div that will contain the new canvas
+            // container_div = document.createElement("div")
+            // container_div.id = "container"
+            // //Sets up the event listeners for the div
+            // container_div.addEventListener("mousedown", function(e){
+            //     canvasDivMouseDown(e)
+            // })
+            // container_div.addEventListener("mousemove", function(e){
+            //     canvasDivMouseMove(e)
+            // })
+            // container_div.addEventListener("mouseup", function(e){
+            //     canvasDivMouseUp(e)
+            // })
+            // container_div.addEventListener("mouseleave", function(e){
+            //     //mouseup and mouseleave provoke the same action.
+            //     canvasDivMouseUp(e)
+            // })
+            // //adds the div to the content box inorder to make it visible to the user
+            // contentBox.appendChild(container_div)
 
-            //method called when the user taps on the canvas
-            newCanvas.stage.on('click tap', function (e) {
-                console.log("click tap")
-                newCanvas.handleTransformers(e)
-            })
-            const name = files[imageNumber].name
-            imageTitle_h3.innerText = name + " (" + (imageNumber+1) + "/" + files.length + ")"
-            //Sets the current canvas to the newly created one
-            currentCanvas = newCanvas
-            //adds the newly created div to the list of divs that contain canvases
-            container_divs.push(container_div)
-            //adds the newly created div to the list of canvases
-            canvases.push(newCanvas)
+            // //creates a new canvas
+            // const newCanvas = new Canvas(file,rightside.offsetWidth,window.innerHeight - 50,image)
+
+            // //method called when the user taps on the canvas
+            // newCanvas.stage.on('click tap', function (e) {
+            //     console.log("click tap")
+            //     newCanvas.handleTransformers(e)
+            // })
+            // const name = files[imageNumber].name
+            // imageTitle_h3.innerText = name + " (" + (imageNumber+1) + "/" + files.length + ")"
+            // //Sets the current canvas to the newly created one
+            // currentCanvas = newCanvas
+            // //adds the newly created div to the list of divs that contain canvases
+            // container_divs.push(container_div)
+            // //adds the newly created div to the list of canvases
+            // canvases.push(newCanvas)
+
+        })
         }
-        
+       
     }
     //Reads the data from the file (this is what will trigger the read.onload method)
-    reader.readAsDataURL(file)
+ //   reader.readAsDataURL(file)
 }
 /**
  * Creates a label given a label object
@@ -437,4 +507,73 @@ function sendData(){
         console.log("done")
     }
     request.send("csv-data="+"csvdata")
+}
+
+/**
+  * 
+  * @param {Image} image 
+  * @param {*} callback 
+  */
+ function imageToCanvasToImage(image, callback){
+    // self = this
+    const canvas = document.createElement("canvas")
+    canvas.width = image.width
+    canvas.height = image.height
+    const context = canvas.getContext("2d")
+    // context.drawImage(image,0,0)
+
+    const result = EXIF.getData(image, function(){
+        var orientation = EXIF.getTag(this,"Orientation")
+        switch(orientation){
+            case 2:
+                // horizontal flip
+                context.translate(canvas.width, 0);
+                context.scale(-1, 1);
+                break;
+            case 3:
+                // 180° rotate left
+                context.translate(canvas.width, canvas.height);
+                context.rotate(Math.PI);
+                break;
+            case 4:
+                // vertical flip
+                context.translate(0, canvas.height);
+                context.scale(1, -1);
+                break;
+            case 5:
+                // vertical flip + 90 rotate right
+                context.rotate(0.5 * Math.PI);
+                context.scale(1, -1);
+                break;
+            case 6:
+            console.log("rotated")
+                // 90° rotate right
+                context.rotate(0.5 * Math.PI);
+                context.translate(0, -canvas.height);
+                break;
+            case 7:
+                // horizontal flip + 90 rotate right
+                context.rotate(0.5 * Math.PI);
+                context.translate(canvas.width, -canvas.height);
+                context.scale(-1, 1);
+                break;
+            case 8:
+                // 90° rotate left
+                context.rotate(-0.5 * Math.PI);
+                context.translate(-canvas.width, 0);
+                break;
+        }
+        context.drawImage(image,0,0)
+        const newImageURL =  canvas.toDataURL()
+        const newImage = new Image()
+        newImage.src = newImageURL 
+        newImage.onload = function(){
+            callback(newImage)
+
+        }
+        console.log("Orientation: " + orientation)
+    })
+
+
+
 }
