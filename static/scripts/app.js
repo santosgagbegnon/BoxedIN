@@ -180,14 +180,13 @@ export_button.addEventListener("click", function(){
         console.log("Response: " + typeof request.response)
         const zipFile = new Blob([request.response], {'type': 'application/zip'})
         const downloadButton = document.createElement("a")
-        downloadButton.innerText = "DOWNLOAD HERE"
         const url = URL.createObjectURL(zipFile)
         downloadButton.download = "NY.zip"
         downloadButton.href = url
-        window.open(url)
-        //console.log(url)
-        rightside.appendChild(downloadButton)
-       // window.open(window.URL.createObjectURL(zipFile), '_blank')
+        downloadButton.style.display = "none"
+        document.body.appendChild(downloadButton)
+        downloadButton.click()
+        document.body.removeChild(download)       
     }
 
 })
