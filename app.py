@@ -76,12 +76,15 @@ def export():
         with zipfile.ZipFile(memory_file, 'w') as zf:
             # zf.write(path)
             for dirname, subdirs, files in os.walk(path):
-                zf.write(dirname)
+                print("directory: " + dirname)
+                zipPath = "training.sframe"
+                zf.write(dirname, arcname=zipPath)
                 for filename in files:
-                    zf.write(os.path.join(dirname, filename))
+                    print("file: " + filename)
+                    zf.write(os.path.join(dirname, filename),arcname=zipPath +"/"+ filename)
                     
         memory_file.seek(0)
-        return send_file(memory_file, attachment_filename='capsule.zip', as_attachment=True)
+        return send_file(memory_file, attachment_filename='dataset.zip', as_attachment=True)
     #return send_file(sFrame, as_attachment=True, attachment_filename="boxedin.sframe")
 
 if __name__ == '__main__':

@@ -181,7 +181,7 @@ export_button.addEventListener("click", function(){
         const zipFile = new Blob([request.response], {'type': 'application/zip'})
         const downloadButton = document.createElement("a")
         const url = URL.createObjectURL(zipFile)
-        downloadButton.download = "NY.zip"
+        downloadButton.download = "dataset.zip"
         downloadButton.href = url
         downloadButton.style.display = "none"
         document.body.appendChild(downloadButton)
