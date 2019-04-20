@@ -335,6 +335,10 @@ function putBackCanvasAt(index){
 
     //updates the current canvas to the one at the given index
     currentCanvas = canvases[index]
+    
+    //Updates the size according to the window size
+    currentCanvas.updateStage(rightside.offsetWidth,window.innerHeight - 50)
+
     putBackLabelsFrom(index)
     return true
 }
