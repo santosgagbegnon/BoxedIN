@@ -27,7 +27,7 @@
 		</div>
 		<div id="rightSideWrapper">
 			<header> 
-				<h2 id="image-title">Image Name (num/total)</h2>
+				<h2 id="image-title"></h2>
 				<div class = "arrows">
 					<input class="move-button" id="previous-button" type="image" src="../static/assets/Back.png"/>
 					<input class="move-button" id="next-button" type="image" src="../static/assets/Forward.png"/>
@@ -36,8 +36,20 @@
 			
 			<div class="ContentBox">
 				<div id="container">
-					<input id= "file" type="file" webkitdirectory mozdirectory />
+					
+						<input id= "file" type="file" webkitdirectory mozdirectory />
+						<button id="upload" type="submit">Upload</button>
+					
+
 				</div>
+				<!-- <form id="container">
+					<input id= "file" type="file" webkitdirectory mozdirectory />
+					<p>Drag your folder here or click in this area.</p>
+					<button id="upload" type="submit">Upload</button>
+				</form> -->
+				<!-- <div id="container">
+					<input id= "file" type="file" webkitdirectory mozdirectory />
+				</div> -->
 			</div>	
 		
 		</div>

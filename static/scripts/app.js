@@ -22,7 +22,6 @@ const previous_button = document.getElementById("previous-button")
 const next_button = document.getElementById("next-button")
 const toolToggle_checkbox = document.getElementById("tool-toggle")
 const imagesInput = document.getElementById('file');
-const sidebar_div = document.getElementById("sidebar")
 let files = imagesInput.files
 
 let currentCanvas = null //Represents the canvas that is currently visible to the user 
@@ -85,10 +84,11 @@ previous_button.addEventListener("click", function(e){
 
 /**
  * Method called when the user clicks on the upload button and uploads a file.
- * @param {*} e the change event
+ * @param {*} e the change event 
  */
 imagesInput.onchange = function(e) {
     //Filters out the files to only contain those with the type 'image'
+    console.log(this.files)
     files = Array.from(this.files).filter( function(s){ 
         return s.type.includes("image") ;
     });
@@ -100,7 +100,6 @@ imagesInput.onchange = function(e) {
         alert("Hmm, there were no images found in the folder!")
     }
 }
-
 /**
  * Event listener that listens for the window being resized.
  * When this occurs, the canvas stage's size is updated
@@ -108,12 +107,6 @@ imagesInput.onchange = function(e) {
 window.addEventListener("resize",function(e){
     currentCanvas.updateStage(rightside.offsetWidth,window.innerHeight - 50)
     // container_div.style.width = rightside.offsetWidth
-})
-
-window.addEventListener("keypress", function(e){
-    if(e.target.nodeName == "INPUT"){return}
-    console.log("Window pressed")
-
 })
 
 /**
@@ -125,10 +118,6 @@ document.addEventListener("keypress", function(e){
     //Checks if the keypress occured on an input. If it was, the keypress is ignored.
     console.log(e.target.className)
     if(e.target.className == "label-input"){
-        if (e.which == 13){
-            console.log("here")
-            sidebar_div.click()
-        }
         return
     }
     console.log("Document pressed: " + e.which)
@@ -175,7 +164,6 @@ toolToggle_checkbox.addEventListener("change", function(e){
 })
 
 export_button.addEventListener("click", function(){
-    console.log("Export")
     if(canvases.length < files.length){
         alert("You're exporting early. " + canvases.length + "/" + files.length + " of the images will be placed in the SFrame.")
     }
@@ -194,8 +182,6 @@ export_button.addEventListener("click", function(){
     request.send(JSON.stringify(data))
     request.responseType =  "arraybuffer"
     request.onload = function() {
-        console.log("response")
-        console.log("Response: " + typeof request.response)
         const zipFile = new Blob([request.response], {'type': 'application/zip'})
         const downloadButton = document.createElement("a")
         const url = URL.createObjectURL(zipFile)
