@@ -68,8 +68,6 @@ export default class Canvas{
         this.stage.add(this.rectangleLayer)
 
         this.shouldResize = false
-        // console.log("Image info " + this.image.width() + " height: " + this.image.height())
-        // console.log("Stage info " + this.stage.width() + " height: " + this.stage.height())
     }
 
     /**
@@ -101,7 +99,6 @@ export default class Canvas{
 
         this.rectangleLayer.add(transformer);
         transformer.attachTo(e.target);
-        // console.log(e.target)
         this.rectangleLayer.draw();
     }
     /**
@@ -181,7 +178,6 @@ export default class Canvas{
             return null
         }
 
-        console.log("Created: " + "rectangle"+Canvas.rectID)
         //Creates a unique ID for the new rectangle
         const rectangleName = "rectangle"+Canvas.rectID
         Canvas.rectID += 1
@@ -279,7 +275,6 @@ export default class Canvas{
     }
 
     destroyRectangle(name){
-        console.log("destroying: " +name)
         this.findRectangle(name).destroy()
         this.removeLabel(this.findLabel(name))
         this.findLabel(name)
@@ -403,7 +398,6 @@ export default class Canvas{
                 width: rectangle.width()*stageScaleX,
                 height: rectangle.height()*stageScaleY
             })
-          //  console.log("RECTANGLE" + rectangle.width() + " " + rectangle.height())
         }
         //Respoitions the image to be in the middle
         this.image.x(this.image.width()*scale/2)
@@ -435,10 +429,7 @@ export default class Canvas{
         const stageScaleY = stageSize.height / oldStageHeight
 
         //CSV stuff
-        // let titles = ["image", "name","annotations"]
-        // let data = "Height: {height} Width: {width}".replace("{height}", stageSize.height).replace("{width}", stageSize.width) + ";["
         let annotations = []
-        console.log("Number of rectangles: " + rectangles.length)
         for(var index = 0; index < rectangles.length; index++){
             const rectangle = rectangles[index]
             const label = this.findLabel(rectangle.name())
@@ -474,11 +465,7 @@ export default class Canvas{
                 }
             }
             annotations.push(annotation)
- 
-            // data += "," + JSON.stringify(annotation)
-            // console.log("minX: " + minX + "maxX: " + maxX + "minY: " + minY + "maxY: "+ maxY)
         }
-        //console.log(this.image.image().toDataURL())
         const row = {
             base64: this.image.image().toDataURL().split(",")[1],
             image : "Height: " + stageSize.height + " Width: " +stageSize.width,
@@ -486,9 +473,6 @@ export default class Canvas{
             label: "boxedIN",
             annotation: annotations
         }
-        console.log(row)
-        // console.log(this.image.image().src.split(",")[1])
-        // console.log(JSON.stringify(row))
         count = count +1
         return row 
     }

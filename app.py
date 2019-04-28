@@ -9,17 +9,6 @@ import base64
 from flask import Flask,render_template,request,send_file
 app = Flask(__name__)
 
-def getAnnotations(oldAnnoations):
-    annotations = []
-    for index in range (0, len(oldAnnoations)):
-        annotation = oldAnnoations[index]
-        annotation["label"] = annotation["label"]["name"]
-        annotation["coordinates"]["height"] = abs(annotation["coordinates"]["height"])
-        annotation["coordinates"]["width"] = abs(annotation["coordinates"]["width"])
-        annotations.append(annotation)
-    return annotations
-
-
 def createSFrame(imagesData):
     with tempfile.TemporaryDirectory() as tmpdirname:
         imageCol = []
@@ -32,8 +21,6 @@ def createSFrame(imagesData):
             image.convert('RGB').save(imagePath, 'JPEG')          
             savedImage = tc.Image(imagePath)
             imageCol.append(savedImage)
-            print("DATA")
-            #print(type(data["annotation"][0]["label"]))
             labelCol.append(data["label"])
             annotationCol.append(data["annotation"])
         #Changing regular arrays in to turicreate SArrays.
@@ -56,7 +43,6 @@ def createImage(data):
         image.convert('RGB').save(tmpdirname + "/test.jpg", 'JPEG')
         
         #load images and do the turic reate stuff
-        # image.save(tmpdirname + "/test.jpg", 'JPEG')
         newImage = Image.open(tmpdirname+"/test.jpg")
 
         tcImage = tc.Image(tmpdirname+"/test.jpg")
@@ -80,7 +66,6 @@ def appIndex():
 def export():   
     print("Got Data")
     results = request.get_json()["results"]
-    print("Number of images: " + str(len(results)))
     sFrame = createSFrame(results)
     memory_file = BytesIO()
     with tempfile.TemporaryDirectory() as tmpdirname:
@@ -89,11 +74,9 @@ def export():
         with zipfile.ZipFile(memory_file, 'w') as zf:
             # zf.write(path)
             for dirname, subdirs, files in os.walk(path):
-                print("directory: " + dirname)
                 zipPath = "training.sframe"
                 zf.write(dirname, arcname=zipPath)
                 for filename in files:
-                    print("file: " + filename)
                     zf.write(os.path.join(dirname, filename),arcname=zipPath +"/"+ filename)
                     
         memory_file.seek(0)
