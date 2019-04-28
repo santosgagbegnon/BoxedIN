@@ -417,7 +417,7 @@ function createLabelElement(label){
     const trash_button = document.createElement("input")
     trash_button.className = "trash-button"
     trash_button.type = "image"
-    trash_button.src = "https://findicons.com/files/icons/1580/devine_icons_part_2/128/trash_recyclebin_empty_closed.png"
+    trash_button.src = "../static/assets/trash.png"
     trash_button.addEventListener("click",function(e){
         const labelID = e.target.parentNode.querySelector(".label-input").id
         currentCanvas.destroyRectangle(labelID)
@@ -449,7 +449,15 @@ function createLabelElement(label){
             }
         }
         if(colour == null) { colourCount += 1}
-        colour = colour || colours[colourCount%3]
+        let defaultColour = null
+        if(colourCount >= colours.length-1){
+            defaultColour = '#'+Math.random().toString(16).substr(-6);
+        }
+        else{
+            defaultColour = colours[colourCount]
+        }
+        colour = colour || defaultColour
+        
         currentCanvas.updateLabelColour(label.id, colour)
         list_item.style.backgroundColor = colour //currentCanvas.getLabelColour(label.id)
     })
@@ -461,6 +469,6 @@ function createLabelElement(label){
 
 }
 
-const colours = ["#ff553f","#663ce6", "#7ceb40"]
+const colours = ["#3BE2DA","#FFCC00","#B81365","#3610DC","#ff553f", "#7ceb40","#663ce6","#024E80","#009933","#A8350C","#FD427C"]
 const defaultColour = "#8de874"
 let colourCount = -1

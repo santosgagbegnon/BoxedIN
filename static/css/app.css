@@ -41,8 +41,6 @@ html{
 	outline: none;
 	padding: 0;
 	border: none;
-
-
 }
 
 #undo-button{
@@ -83,12 +81,13 @@ html{
 	outline: none;
 	text-align: center;
 	font-size: 15px;	
-  }
+}
 
 .trash-button{
 	border: none;
 	position: absolute;
 	vertical-align: middle;	
+	margin-top: -2px;
 	right: 30px;
 	height: 25px;
 	width: 25px;

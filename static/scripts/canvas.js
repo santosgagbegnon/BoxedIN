@@ -112,7 +112,7 @@ export default class Canvas{
             y: this.stage.getPointerPosition().y,
             width: 0,
             height: 0,
-            stroke: defaultColour,
+            stroke: "#000000",
             strokeWidth: 2,
             dragBoundFunc: function(pos) {
                 const maxX = this.getParent().getParent().width() - this.width()
@@ -494,7 +494,7 @@ export class Label {
      */
     constructor(id,colour,name){
         this.id = id
-        this.colour = colour || defaultColour
+        this.colour = colour || "#000000"
         this.name = name || ""
     }
     /**
