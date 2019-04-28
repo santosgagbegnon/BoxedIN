@@ -453,7 +453,7 @@ export default class Canvas{
             }
             annotations.push(annotation)
  
-            data += "," + JSON.stringify(annotation)
+            // data += "," + JSON.stringify(annotation)
             // console.log("minX: " + minX + "maxX: " + maxX + "minY: " + minY + "maxY: "+ maxY)
         }
         //console.log(this.image.image().toDataURL())

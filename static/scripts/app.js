@@ -22,6 +22,7 @@ const previous_button = document.getElementById("previous-button")
 const next_button = document.getElementById("next-button")
 const toolToggle_checkbox = document.getElementById("tool-toggle")
 const imagesInput = document.getElementById('file');
+const sidebar_div = document.getElementById("sidebar")
 let files = imagesInput.files
 
 let currentCanvas = null //Represents the canvas that is currently visible to the user 
@@ -109,16 +110,29 @@ window.addEventListener("resize",function(e){
     // container_div.style.width = rightside.offsetWidth
 })
 
+window.addEventListener("keypress", function(e){
+    if(e.target.nodeName == "INPUT"){return}
+    console.log("Window pressed")
+
+})
+
 /**
  * Event listener for key presses. 
  * Handles keyboard shortcuts 
  */
 
- 
 document.addEventListener("keypress", function(e){
     //Checks if the keypress occured on an input. If it was, the keypress is ignored.
-    if(e.target.nodeName == "INPUT"){return}
+    if(e.target.nodeName == "INPUT"){
+        if (e.which == 13){
+            console.log("here")
+            sidebar_div.click()
+        }
+        return
+    }
+    console.log("Document pressed: " + e.which)
     const unicode = e.which //gets the unicode of the button pressed
+    
     switch (unicode) {
         //Pressed D/d
         case 68,100:
@@ -441,6 +455,11 @@ function createLabelElement(label){
             name: label.value
         })
         list_item.style.backgroundColor = currentCanvas.getLabelColour(label.id)
+    })
+    labelName_input.addEventListener("keydown", function(e){
+        if(e.which == 13){
+            this.blur()
+        }
     })
 
 }

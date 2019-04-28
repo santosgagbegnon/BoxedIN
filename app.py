@@ -9,6 +9,17 @@ import base64
 from flask import Flask,render_template,request,send_file
 app = Flask(__name__)
 
+def getAnnotations(oldAnnoations):
+    annotations = []
+    for index in range (0, len(oldAnnoations)):
+        annotation = oldAnnoations[index]
+        annotation["label"] = annotation["label"]["name"]
+        annotation["coordinates"]["height"] = abs(annotation["coordinates"]["height"])
+        annotation["coordinates"]["width"] = abs(annotation["coordinates"]["width"])
+        annotations.append(annotation)
+    return annotations
+
+
 def createSFrame(imagesData):
     with tempfile.TemporaryDirectory() as tmpdirname:
         imageCol = []
@@ -21,8 +32,10 @@ def createSFrame(imagesData):
             image.convert('RGB').save(imagePath, 'JPEG')          
             savedImage = tc.Image(imagePath)
             imageCol.append(savedImage)
+            print("DATA")
+            #print(type(data["annotation"][0]["label"]))
             labelCol.append(data["label"])
-            annotationCol.append(data["annotation"])
+            annotationCol.append(getAnnotations(data["annotation"]))
         #Changing regular arrays in to turicreate SArrays.
         imageCol = tc.SArray(imageCol)
         labelCol= tc.SArray(labelCol)
