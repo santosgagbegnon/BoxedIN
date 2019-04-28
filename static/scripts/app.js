@@ -45,7 +45,7 @@ next_button.addEventListener("click", function(e){
     imageNumber ++
     //Checks if there are anymore photos to display
     if(imageNumber >= files.length){
-        console.log("@ the end of the photos")
+        alert("This is the last image!")
         imageNumber --
         return
     }
@@ -69,7 +69,7 @@ previous_button.addEventListener("click", function(e){
     //Checks if the user is @ the first photo
     //todo: possibly make it loop back to the last image?
     if(imageNumber < 0){
-        console.log("@ the first image")
+        alert("This is the first image!")
         imageNumber = 0
         return
     }
@@ -97,7 +97,7 @@ imagesInput.onchange = function(e) {
         handleImage()
     }
     else{
-        console.log("no images found :(")
+        alert("Hmm, there were no images found in the folder!")
     }
 }
 
