@@ -37,6 +37,14 @@ html{
 	color: #03aa8c;
 }
 
+.action-button:focus {
+	outline: none;
+	padding: 0;
+	border: none;
+
+
+}
+
 #undo-button{
 	left: 50px;
 }
@@ -51,7 +59,7 @@ html{
 #labels-list{
 	position: relative;
 	margin-top: 20px;
-    height: 550px;
+    height: 55%;
     overflow: hidden;
     overflow-y: scroll;
 }
@@ -166,3 +174,10 @@ canvas {
 	align-content: center;
 	justify-content: center;
 }
+
+input[type="button"]{
+	outline:none;
+ }
+ input[type="button"]::-moz-focus-inner {
+	border: 0;
+ }
