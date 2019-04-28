@@ -168,11 +168,13 @@ export_button.addEventListener("click", function(){
     if(canvases.length < files.length){
         alert("You're exporting early. " + canvases.length + "/" + files.length + " of the images will be placed in the SFrame.")
     }
+    const loader_div = document.createElement("div")
+    loader_div.className = "loader"
+    document.body.appendChild(loader_div)
     let results = []
     for(var index = 0; index < canvases.length; index++){
         const data = canvases[index].exportData()
         results.push(data)
-
     }
     const data = {
         results :results
