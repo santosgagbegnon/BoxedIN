@@ -8,6 +8,7 @@ from io import BytesIO
 import base64
 from flask import Flask,render_template,request,send_file
 app = Flask(__name__)
+PORT = 5000
 
 def createSFrame(imagesData):
     with tempfile.TemporaryDirectory() as tmpdirname:
@@ -40,12 +41,12 @@ def createSFrame(imagesData):
 def createImage(data):
     with tempfile.TemporaryDirectory() as tmpdirname:
         image = Image.open(BytesIO(base64.b64decode(data)))
-        image.convert('RGB').save(tmpdirname + "/test.jpg", 'JPEG')
+        image.convert('RGB').save(tmpdirname + "/temp.jpg", 'JPEG')
         
         #load images and do the turic reate stuff
-        newImage = Image.open(tmpdirname+"/test.jpg")
+        newImage = Image.open(tmpdirname+"/temp.jpg")
 
-        tcImage = tc.Image(tmpdirname+"/test.jpg")
+        tcImage = tc.Image(tmpdirname+"/temp.jpg")
         sFrame = tc.SFrame()
         sFrame["image"] = tc.SArray([])
 
@@ -84,5 +85,5 @@ def export():
     #return send_file(sFrame, as_attachment=True, attachment_filename="boxedin.sframe")
 
 if __name__ == '__main__':
-     app.run(host ='127.0.0.1', port = 8001, debug = True)
+     app.run(host ='127.0.0.1', port = 5000, debug = True)
 
