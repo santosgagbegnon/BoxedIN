@@ -123,7 +123,8 @@ window.addEventListener("keypress", function(e){
 
 document.addEventListener("keypress", function(e){
     //Checks if the keypress occured on an input. If it was, the keypress is ignored.
-    if(e.target.nodeName == "INPUT"){
+    console.log(e.target.className)
+    if(e.target.className == "label-input"){
         if (e.which == 13){
             console.log("here")
             sidebar_div.click()
