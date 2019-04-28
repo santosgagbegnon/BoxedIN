@@ -303,11 +303,8 @@ export default class Canvas{
     }
  
     /**
-     * Returns the correct colour of label.
-     * If the label specificed has a name that matches an already existing one, that colour is returned. Otherwise, a new colour is returned.
+     * Returns the colour assoicated to the name of the label provided.
      * For example: If the label 'Car' with the colour 'red' attached to it exists and you pass in the ID of a label whose name is 'Car' red is returned.
-     * On the other hand, if you pass in the ID of a label with the name 'Person' and no other 'Person' label exists, a new colour which be returned and every 'Person label
-     * following would have that label returned to them.
      * @param {string} id ID of the Label
      */
     getLabelColour(targetLabel){
@@ -326,21 +323,13 @@ export default class Canvas{
            }
         }
         return newColour
-        if(newColour == null) { colourCount += 1}
-       
-        //sets the new colour of the target label
-        targetLabel.config({
-            colour: newColour || colours[colourCount%3] 
-        })
-        //updates the colour of the rectangle
-        const rectangle = this.findRectangle(id)
-        if(rectangle != null){
-            rectangle.stroke(newColour || colours[colourCount%3])
-            this.rectangleLayer.draw()
-        }
-       return newColour || colours[colourCount%3] 
     }
 
+    /**
+     * Updates a label colour
+     * @param {string} id the id of the label to update
+     * @param {string} colour the new colour to update the label with
+     */
     updateLabelColour(id, colour){
         const label = this.findLabel(id)
         if(!label || !colour){return}
@@ -441,7 +430,6 @@ export default class Canvas{
                 continue
             }
 
-
             const width = rectangle.width()*stageScaleX
             const height = rectangle.height()*stageScaleY
 
@@ -477,9 +465,6 @@ export default class Canvas{
         return row 
     }
 }
-
-//Temporary
-var colourCount = -1
 
 /**
  * Label that represents the name of a single rectangle.
