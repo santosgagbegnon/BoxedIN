@@ -14,8 +14,12 @@
 			</div>
 			<button class="action-button" id="undo-button" type="button">Undo</button>
             <button class="action-button" id="redo-button" type="button">Redo</button>
-            <br></br>
-            <input id="tool-toggle"type="checkbox"></input>
+			<br></br>
+			<label class="switch">
+				<input id="tool-toggle"type="checkbox"></input>				
+				<span class="slider round"></span>
+				<p id="toggleLabel">Drawing</p>
+			</label>
             <ul id=labels-list>
 				<!-- <li class="label">
 					<input value ="test" class="label-input"></input>
@@ -36,11 +40,11 @@
 			
 			<div class="ContentBox">
 				<div id="container">
-					
+					<form>
 						<input id= "file" type="file" webkitdirectory mozdirectory />
 						<button id="upload" type="submit">Upload</button>
+					</form>
 					
-
 				</div>
 				<!-- <form id="container">
 					<input id= "file" type="file" webkitdirectory mozdirectory />

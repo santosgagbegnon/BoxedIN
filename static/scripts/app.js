@@ -126,6 +126,7 @@ document.addEventListener("keypress", function(e){
             //if the drawing tool is not already selected, it's selected and the canvas
             //is made uneditable.
             if(toolToggle_checkbox.checked){
+                document.getElementById("toggleLabel").innerText = "Drawing"
                 toolToggle_checkbox.checked = false
                 tool = 0
                 currentCanvas.editable(false)
@@ -136,6 +137,7 @@ document.addEventListener("keypress", function(e){
             //if the the resizing/moving tool is not already selected, it's selected and the canvas
             //is made editable/
             if(!toolToggle_checkbox.checked){
+                document.getElementById("toggleLabel").innerText = "Editing"
                 toolToggle_checkbox.checked = true
                 tool = 1
                 currentCanvas.editable(true)
@@ -151,10 +153,12 @@ document.addEventListener("keypress", function(e){
  */
 toolToggle_checkbox.addEventListener("change", function(e){
     if(e.target.checked){
+        document.getElementById("toggleLabel").innerText = "Editing"
         tool = 1
         currentCanvas.editable(true)
     }
     else{
+        document.getElementById("toggleLabel").innerText = "Drawing"
         tool = 0
         currentCanvas.editable(false)
     }
@@ -453,13 +457,13 @@ function createLabelElement(label){
         if(colourCount >= colours.length-1){
             defaultColour = '#'+Math.random().toString(16).substr(-6);
         }
-        else{
+        else if(colour == null){
             defaultColour = colours[colourCount]
         }
         colour = colour || defaultColour
         
         currentCanvas.updateLabelColour(label.id, colour)
-        list_item.style.backgroundColor = colour //currentCanvas.getLabelColour(label.id)
+        list_item.style.backgroundColor = colour
     })
     labelName_input.addEventListener("keydown", function(e){
         if(e.which == 13){
