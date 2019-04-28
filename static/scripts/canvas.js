@@ -6,6 +6,7 @@ const defaultColour = "#8de874"
  * Class that represents a drawable canvas.
  */
 export default class Canvas{
+    static rectID = 0
     /**
      * Constructor for canvas 
      * @param {number} width width of the canvas.
@@ -179,8 +180,11 @@ export default class Canvas{
             this.currentRectangle.destroy()
             return null
         }
+
+        console.log("Created: " + "rectangle"+Canvas.rectID)
         //Creates a unique ID for the new rectangle
-        const rectangleName = "rectangle"+this.numberOfRectangles
+        const rectangleName = "rectangle"+Canvas.rectID
+        Canvas.rectID += 1
         //Sets the name of the rectangle to the unique id created
         this.currentRectangle.name(rectangleName)
 
@@ -275,6 +279,7 @@ export default class Canvas{
     }
 
     destroyRectangle(name){
+        console.log("destroying: " +name)
         this.findRectangle(name).destroy()
         this.removeLabel(this.findLabel(name))
         this.findLabel(name)
@@ -286,7 +291,6 @@ export default class Canvas{
         var index = this.labels.indexOf(label);
         if (index <= -1) {return}
         this.labels.splice(index, 1);
-        console.log("deleted")
     }
 
     /**
@@ -311,8 +315,8 @@ export default class Canvas{
      * following would have that label returned to them.
      * @param {string} id ID of the Label
      */
-    getLabelColour(id){
-        const targetLabel = this.findLabel(id) 
+    getLabelColour(targetLabel){
+       // const targetLabel = this.findLabel(id) 
         let newColour = null
         if(targetLabel == null){
            return
@@ -320,12 +324,13 @@ export default class Canvas{
         //Looks for an existing colour by looping through the current labels and comparing their name
         for(var index = 0; index < this.labels.length; index++ ){
             const currentLabel = this.labels[index]
-            //checks to see if the name of the labels match, but the IDs don't. This ensure that the currentLabel is not the exact same as the targetLabel
-            if(currentLabel.name.trim().toLowerCase() == targetLabel.name.trim().toLowerCase() && currentLabel.id != targetLabel.id){
+            //checks to see if the name of the labels match
+            if(currentLabel.name.trim().toLowerCase() == targetLabel.value.trim().toLowerCase() && currentLabel.id != targetLabel.id){
                 newColour = currentLabel.colour
                 break
            }
         }
+        return newColour
         if(newColour == null) { colourCount += 1}
        
         //sets the new colour of the target label
@@ -339,6 +344,19 @@ export default class Canvas{
             this.rectangleLayer.draw()
         }
        return newColour || colours[colourCount%3] 
+    }
+
+    updateLabelColour(id, colour){
+        const label = this.findLabel(id)
+        if(!label || !colour){return}
+        label.config({
+            colour: colour
+        })
+        const rectangle = this.findRectangle(id)
+        if(rectangle != null){
+            rectangle.stroke(colour)
+            this.rectangleLayer.draw()
+        }
     }
 
     //TODO: Add comments
@@ -420,6 +438,7 @@ export default class Canvas{
         // let titles = ["image", "name","annotations"]
         // let data = "Height: {height} Width: {width}".replace("{height}", stageSize.height).replace("{width}", stageSize.width) + ";["
         let annotations = []
+        console.log("Number of rectangles: " + rectangles.length)
         for(var index = 0; index < rectangles.length; index++){
             const rectangle = rectangles[index]
             const label = this.findLabel(rectangle.name()).name
@@ -427,7 +446,6 @@ export default class Canvas{
                 continue
             }
 
-            console.log(label)
 
             const width = rectangle.width()*stageScaleX
             const height = rectangle.height()*stageScaleY

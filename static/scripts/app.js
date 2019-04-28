@@ -88,7 +88,6 @@ previous_button.addEventListener("click", function(e){
  */
 imagesInput.onchange = function(e) {
     //Filters out the files to only contain those with the type 'image'
-    console.log(this.files)
     files = Array.from(this.files).filter( function(s){ 
         return s.type.includes("image") ;
     });
@@ -116,11 +115,9 @@ window.addEventListener("resize",function(e){
 
 document.addEventListener("keypress", function(e){
     //Checks if the keypress occured on an input. If it was, the keypress is ignored.
-    console.log(e.target.className)
     if(e.target.className == "label-input"){
         return
     }
-    console.log("Document pressed: " + e.which)
     const unicode = e.which //gets the unicode of the button pressed
     
     switch (unicode) {
@@ -190,7 +187,7 @@ export_button.addEventListener("click", function(){
         downloadButton.style.display = "none"
         document.body.appendChild(downloadButton)
         downloadButton.click()
-        document.body.removeChild(download)       
+        document.body.removeChild(downloadButton)       
     }
 
 })
@@ -392,7 +389,6 @@ function handleImage() {
 
         //method called when the user taps on the canvas
         newCanvas.stage.on('click tap', function (e) {
-            console.log("click tap")
             newCanvas.handleTransformers(e)
         })
         const name = files[imageNumber].name
@@ -444,7 +440,18 @@ function createLabelElement(label){
         currentCanvas.findLabel(label.id).config({
             name: label.value
         })
-        list_item.style.backgroundColor = currentCanvas.getLabelColour(label.id)
+        let colour = null
+        for(var index = 0; index < canvases.length; index++){
+            const currentColour = canvases[index].getLabelColour(label)
+            if(currentColour){
+                colour = currentColour
+                break
+            }
+        }
+        if(colour == null) { colourCount += 1}
+        colour = colour || colours[colourCount%3]
+        currentCanvas.updateLabelColour(label.id, colour)
+        list_item.style.backgroundColor = colour //currentCanvas.getLabelColour(label.id)
     })
     labelName_input.addEventListener("keydown", function(e){
         if(e.which == 13){
@@ -453,3 +460,7 @@ function createLabelElement(label){
     })
 
 }
+
+const colours = ["#ff553f","#663ce6", "#7ceb40"]
+const defaultColour = "#8de874"
+let colourCount = -1

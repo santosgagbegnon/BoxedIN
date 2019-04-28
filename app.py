@@ -35,7 +35,7 @@ def createSFrame(imagesData):
             print("DATA")
             #print(type(data["annotation"][0]["label"]))
             labelCol.append(data["label"])
-            annotationCol.append(getAnnotations(data["annotation"]))
+            annotationCol.append(data["annotation"])
         #Changing regular arrays in to turicreate SArrays.
         imageCol = tc.SArray(imageCol)
         labelCol= tc.SArray(labelCol)
