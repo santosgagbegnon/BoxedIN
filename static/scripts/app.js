@@ -176,6 +176,9 @@ toolToggle_checkbox.addEventListener("change", function(e){
 
 export_button.addEventListener("click", function(){
     console.log("Export")
+    if(canvases.length < files.length){
+        alert("You're exporting early. " + canvases.length + "/" + files.length + " of the images will be placed in the SFrame.")
+    }
     let results = []
     for(var index = 0; index < canvases.length; index++){
         const data = canvases[index].exportData()
