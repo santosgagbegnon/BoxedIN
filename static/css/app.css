@@ -35,6 +35,7 @@ html{
 	border: none;
 	font-size: 18px;
 	color: #03aa8c;
+	visibility: hidden;
 }
 
 .action-button:focus {
