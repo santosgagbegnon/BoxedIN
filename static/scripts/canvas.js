@@ -441,8 +441,12 @@ export default class Canvas{
         console.log("Number of rectangles: " + rectangles.length)
         for(var index = 0; index < rectangles.length; index++){
             const rectangle = rectangles[index]
-            const label = this.findLabel(rectangle.name()).name
-            if(label == null || label == ""){
+            const label = this.findLabel(rectangle.name())
+            if(!label){
+                continue
+            }
+            const labelName = label.name 
+            if(!labelName || labelName == ""){
                 continue
             }
 
@@ -460,7 +464,7 @@ export default class Canvas{
             const midY = (minY + maxY)/2
 
             const annotation = {
-                label: label,
+                label: labelName,
                 type: "rectangle",
                 coordinates: {
                     height: height,
