@@ -12,7 +12,7 @@ Annotate your dataset of images for object detection inside a Chrome/Firefox bro
 * Delete rectangles
 * Go back to previous image(s)
 ## Requirments 
-* Chrome or Firefox browswer
+* Chrome or Firefox browser
 
 ## Layout 
 
