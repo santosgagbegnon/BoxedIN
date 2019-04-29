@@ -85,5 +85,5 @@ def export():
     #return send_file(sFrame, as_attachment=True, attachment_filename="boxedin.sframe")
 
 if __name__ == '__main__':
-     app.run(host ='127.0.0.1', port = 5000, debug = True)
+     app.run(host ='127.0.0.1', port = PORT, debug = False)
 
