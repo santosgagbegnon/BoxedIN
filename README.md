@@ -28,5 +28,3 @@ Annotate your dataset of images for object detection inside a Chrome/Firefox bro
 * Safari support
 * Undo/Redo action buttons
 * Add more keyboard Shortcuts
-
-<img src="https://github.com/santosgagbegnon/BoxedIN/blob/master/README_Images/no_images_view.png" width="1080">
