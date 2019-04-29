@@ -1,6 +1,7 @@
 # BoxedIN
 #### A simple image annotator designed for TuriCreate.
 Live at: https://boxedin-tool.herokuapp.com/app
+
 Annotate your dataset of images for object detection inside a Chrome/Firefox browser and export the data into a ready-to-use SFrame.
 ## Features
 * Colour coded labels
